@@ -20,16 +20,13 @@
 
 package ca.ualberta.cs.bholmwooToDo;
 
+
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
-
-import android.app.ListActivity;
-import android.os.Bundle;
-import android.util.SparseBooleanArray;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -38,7 +35,7 @@ import android.widget.EditText;
 
 
 
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 
 	
 	ArrayList TODOList = new ArrayList();
@@ -51,6 +48,8 @@ public class MainActivity extends ListActivity {
 		setContentView(R.layout.activity_main);
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
+		
+		ListView TODOListView = (ListView) findViewByID(R.id.TodoListView);
 		
 		ListViewAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
 		
@@ -65,7 +64,7 @@ public class MainActivity extends ListActivity {
 		
         addButton.setOnClickListener(addTODOListener);
         
-        setListAdapter(ListViewAdapter);
+        ((Object) TODOListView).setAdapter(ListViewAdapter);
         
 	}
 
