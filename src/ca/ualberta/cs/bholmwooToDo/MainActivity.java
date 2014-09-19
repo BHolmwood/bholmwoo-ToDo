@@ -32,6 +32,8 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
 
 
 
@@ -49,7 +51,7 @@ public class MainActivity extends Activity {
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
-		ListView TODOListView = (ListView) findViewByID(R.id.TodoListView);
+		ListView TODOListView = (ListView) findViewById(R.id.TodoListView);
 		
 		ListViewAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
 		
@@ -64,7 +66,7 @@ public class MainActivity extends Activity {
 		
         addButton.setOnClickListener(addTODOListener);
         
-        ((Object) TODOListView).setAdapter(ListViewAdapter);
+        TODOListView.setAdapter(ListViewAdapter);
         
 	}
 
