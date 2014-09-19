@@ -5,12 +5,48 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
 
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.util.SparseBooleanArray;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+
+
+
+public class MainActivity extends ListActivity {
+
+	
+	ArrayList TODOList = new ArrayList();
+	
+	ArrayAdapter ListViewAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		Button addButton = (Button) findViewById(R.id.addButton);
+		
+		ListViewAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
+		
+        OnClickListener addTODOListener = new OnClickListener() {
+            public void onClick(View v) {
+                EditText edit = (EditText) findViewById(R.id.addTODOField);
+                TODOList.add(edit.getText().toString());
+                edit.setText("");
+                ListViewAdapter.notifyDataSetChanged();
+            }
+        };
+		
+        addButton.setOnClickListener(addTODOListener);
+        
+        setListAdapter(ListViewAdapter);
+        
 	}
 
 	@Override

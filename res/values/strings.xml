@@ -4,5 +4,7 @@
     <string name="app_name">bholmwoo-ToDo</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="addFieldHint">Enter a new ToDo</string>
+    <string name="addText">Add</string>
+    <string name="emptyListText">ToDo list is empty</string>
 </resources>
