@@ -27,11 +27,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -46,9 +49,6 @@ public class MainActivity extends Activity {
 
 	
 	ArrayList<TODO> TODOList = new ArrayList<TODO>();
-	
-
-	
 	ArrayAdapter<TODO> ListViewAdapter;
 	
 	@Override
@@ -59,6 +59,8 @@ public class MainActivity extends Activity {
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
 		ListView TODOListView = (ListView) findViewById(R.id.TodoListView);
+		
+		registerForContextMenu(TODOListView);
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
 		
@@ -113,6 +115,71 @@ public class MainActivity extends Activity {
         checkedCountText.setText("Completed: " + checkedCount);
 		uncheckedCountText.setText("Uncompleted: " + (itemCount - checkedCount));
 	}
+	
+	/*
+	public void onCreateContextMenu(ContextMenu menu, View v,
+		    ContextMenuInfo menuInfo) {
+		  if (v.getId()==R.id.TodoListView) {
+		    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+		    menu.setHeaderTitle(TODOList.get(info.position).toString());
+		    String[] menuItems = getResources().getStringArray(R.array.menu);
+		    for (int i = 0; i<menuItems.length; i++) {
+		      menu.add(Menu.NONE, i, i, menuItems[i]);
+		    }
+		  }
+		}
+	*/
+	
+	/*
+	public void onCreateContextMenu(ContextMenu menu, View v,
+	        ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.context_menu, menu);
+	}
+	*/
+	
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	    super.onCreateContextMenu(menu, v, menuInfo);
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+	    String title = ListViewAdapter.getItem(info.position).getText();
+	    menu.setHeaderTitle(title);
+
+	    menu.add("Archive");
+	    menu.add("Remove");
+	}
+
+	public boolean onContextItemSelected(MenuItem item) {
+
+	    if (item.getTitle() == "Remove") {
+            TODOList.remove(item.getItemId());
+            ListViewAdapter.notifyDataSetChanged();
+            updateChecked();
+	    } 
+	    /*
+	      else if (...) {
+	        // code
+	    } */
+		else {
+	        return false;
+	    }
+	    return true;
+
+	}
+	/*
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case MENU_CONTEXT_DELETE_ID:
+	        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	        Log.d(TAG, "removing item pos=" + info.position);
+	        mAdapter.remove(info.position);
+	        return true;
+	    default:
+	        return super.onContextItemSelected(item);
+	    }
+	}
+	*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

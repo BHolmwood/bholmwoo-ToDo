@@ -49,6 +49,8 @@ public final class R {
         public static final int addFieldHint=0x7f050003;
         public static final int addText=0x7f050004;
         public static final int app_name=0x7f050000;
+        public static final int defaultChecked=0x7f050008;
+        public static final int defaultUnchecked=0x7f050009;
         public static final int emptyListText=0x7f050005;
         public static final int hello_world=0x7f050001;
         public static final int title_activity_archive_view=0x7f050006;

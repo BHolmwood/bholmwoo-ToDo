@@ -9,5 +9,8 @@
     <string name="emptyListText">ToDo list is empty</string>
     <string name="title_activity_archive_view">ArchiveViewActivity</string>
     <string name="viewArchive">View Archive</string>
+    <string name="defaultChecked">Completed: 0</string>
+    <string name="defaultUnchecked">Uncompleted: 0</string>
+
 
 </resources>
