@@ -45,9 +45,11 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	
-	ArrayList TODOList = new ArrayList();
+	ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	
-	ArrayAdapter ListViewAdapter;
+
+	
+	ArrayAdapter<TODO> ListViewAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +60,18 @@ public class MainActivity extends Activity {
 		
 		ListView TODOListView = (ListView) findViewById(R.id.TodoListView);
 		
-		ListViewAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
+		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
 		
         OnClickListener addTODOListener = new OnClickListener() {
             public void onClick(View v) {
                 EditText edit = (EditText) findViewById(R.id.addTODOField);
-                TODOList.add(edit.getText().toString());
+                TODO newTODO = new TODO(edit.getText().toString());
+                TODOList.add(newTODO);
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
                 updateChecked();
             }
         };
-        
-        /*
-        OnClickListener checkListener = new OnClickListener() {
-        	public void onClick(View v) {
-        		updateChecked();
-        	}
-        };
-        */
         
         TODOListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -107,7 +102,11 @@ public class MainActivity extends Activity {
         
         for(int i=itemCount-1; i >= 0; i--){
             if(checkedItemPositions.get(i)){
+            	TODOList.get(i).setStatus(true);
                 checkedCount++;
+            }
+            else {
+            	TODOList.get(i).setStatus(false);
             }
         }
         

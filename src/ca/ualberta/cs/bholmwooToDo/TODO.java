@@ -9,9 +9,13 @@ public class TODO {
 	//Constructor
 	//Set TODO text to input text and set default status to false (not done)
 	public TODO(String text) {
-		super();
+		//super();
 		this.text = text;
 		this.status = false;
+	}
+
+	public String toString() {
+		return text;
 	}
 	
 	public String getText() {
