@@ -18,13 +18,14 @@
  */ 
 
 //http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/
+//http://stackoverflow.com/questions/8785955/serialization-arraylist-java
+//http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
+//http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it
 
 package ca.ualberta.cs.bholmwooToDo;
 
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -58,37 +59,42 @@ public class MainActivity extends Activity {
 	private static final String TODOFILENAME = "TODOLists.sav";
 	private static final String ARCHFILENAME = "ArchLists.sav";
 	
-	ArrayList<TODO> TODOList = new ArrayList<TODO>();
+	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
+	
+	ArrayList<TODO> TODOList;
+	
 	ArrayAdapter<TODO> ListViewAdapter;
+	ListView TODOListView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+	
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
-		ListView TODOListView = (ListView) findViewById(R.id.TodoListView);
-		
-		registerForContextMenu(TODOListView);
-		
-		File file = new File(TODOFILENAME);
-		if(file.exists()) {
-			try {	
-				TODOList = loadFromFile(TODOFILENAME);
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		TODOListView = (ListView) findViewById(R.id.TodoListView);
+	
+		try {
+			TODOList = loadFromFile(TODOFILENAME);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
+        TODOListView.setAdapter(ListViewAdapter);
+        ListViewAdapter.notifyDataSetChanged();
+		
+		registerForContextMenu(TODOListView);
 		
         OnClickListener addTODOListener = new OnClickListener() {
             public void onClick(View v) {
                 EditText edit = (EditText) findViewById(R.id.addTODOField);
                 TODO newTODO = new TODO(edit.getText().toString());
                 TODOList.add(newTODO);
+                saveInFile(TODOFILENAME, TODOList);
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
                 updateChecked();
@@ -98,6 +104,7 @@ public class MainActivity extends Activity {
         TODOListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
+            	saveInFile(TODOFILENAME, TODOList);
             	updateChecked();
         
             }
@@ -105,9 +112,30 @@ public class MainActivity extends Activity {
         });
 		
         addButton.setOnClickListener(addTODOListener);
+    
         
+        //TODOListView.setAdapter(ListViewAdapter);
+        
+	}
+	/*
+	protected void onStart() {
+		// Auto-generated method stub
+		super.onStart();
+		try {
+			TODOList = loadFromFile(TODOFILENAME, this);
+		} catch (ClassNotFoundException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
         TODOListView.setAdapter(ListViewAdapter);
-        
+        ListViewAdapter.notifyDataSetChanged();
+	}
+	*/
+	
+	protected void onPause() {
+		super.onPause();
+		saveInFile(TODOFILENAME, TODOList);
 	}
 	
 	public void updateChecked() {
@@ -134,9 +162,10 @@ public class MainActivity extends Activity {
         checkedCountText.setText("Completed: " + checkedCount);
 		uncheckedCountText.setText("Uncompleted: " + (itemCount - checkedCount));
 		
-		saveInFile(TODOFILENAME, TODOList);
+		//saveInFile(TODOFILENAME, TODOList);
 		
 	}
+	
 	
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -187,50 +216,52 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	private void saveInFile(String FILENAME, ArrayList<TODO> TODOList) {
+	public void saveInFile(String FILENAME, ArrayList<TODO> TODOList) {
+		
+		TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
+		
+		savedDebugText.setText("saveInFile() called");
+		
+		FileOutputStream fos;
+		ObjectOutputStream os;
+
 		try {
-			//FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-			
-			FileOutputStream fos = new FileOutputStream(FILENAME);
-			ObjectOutputStream os = new ObjectOutputStream(fos);
-			os.writeObject(TODOList);
-			os.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		  fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+		  os = new ObjectOutputStream(fos);
+		  os.writeObject(TODOList);
+		  savedDebugText.setText("Saved to file");
+		  os.close();
+		} catch (Exception e) {
+			savedDebugText.setText("exception thrown: " + e);
 			e.printStackTrace();
 		}
+		
 	}
 
-	private ArrayList<TODO> loadFromFile(String FILENAME) throws ClassNotFoundException{
+	public ArrayList<TODO> loadFromFile(String FILENAME) throws ClassNotFoundException {
 		ArrayList<TODO> loadedList = new ArrayList<TODO>();
 		
-		//FileInputStream fis;
+		ObjectInputStream ois = null;
+		
 		try {
-			FileInputStream fis = new FileInputStream(FILENAME);
-		    //fis = openFileInput(FILENAME);
-		    ObjectInputStream ois = new ObjectInputStream(fis);
+			FileInputStream fis = openFileInput(FILENAME);
+			ois = new ObjectInputStream(fis);
+			loadedList = (ArrayList<TODO>) ois.readObject();
 		    
-		    
-		    //Object obj = ois.readObject();
-		    
-		    //ArrayList loadedList = (ArrayList) obj;
-		    //loadedTODO = (ArrayList<TODO>) loadedList;
-		    
-		    //loadedTODO = (ArrayList<TODO>) obj;
-		    
-		    loadedList = (ArrayList<TODO>) ois.readObject();
-		    
-		    ois.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			return loadedList;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		    try {
+		        if(ois != null) {
+		            ois.close();
+		        }
+		    } catch (IOException e) {
+		    	e.printStackTrace();
+		    }
+		} 
+		
+		catch (IOException e) {
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return loadedList;
 	}
 	

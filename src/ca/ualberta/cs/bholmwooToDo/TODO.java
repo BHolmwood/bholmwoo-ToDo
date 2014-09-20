@@ -1,6 +1,8 @@
 package ca.ualberta.cs.bholmwooToDo;
 
-public class TODO {
+import java.io.Serializable;
+
+public class TODO implements Serializable {
 
 	private String text;
 	private Boolean status;

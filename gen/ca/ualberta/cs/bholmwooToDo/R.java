@@ -29,12 +29,13 @@ public final class R {
         public static final int ArchTodoListView=0x7f080000;
         public static final int ArchUncheckedCount=0x7f080001;
         public static final int TodoListView=0x7f080005;
-        public static final int action_settings=0x7f080008;
+        public static final int action_settings=0x7f080009;
         public static final int addButton=0x7f080004;
         public static final int addTODOField=0x7f080003;
-        public static final int checkedCount=0x7f080006;
+        public static final int checkedCount=0x7f080008;
+        public static final int savedDebug=0x7f080006;
         public static final int uncheckedCount=0x7f080007;
-        public static final int viewArchive=0x7f080009;
+        public static final int viewArchive=0x7f08000a;
     }
     public static final class layout {
         public static final int activity_archive_view=0x7f030000;

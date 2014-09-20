@@ -7,19 +7,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 public class ArchiveViewActivity extends Activity {
 
@@ -39,20 +36,17 @@ public class ArchiveViewActivity extends Activity {
 		
 		registerForContextMenu(TODOListView);
 		
-		
+		/*
+		try {
+			ArchList = MainActivity.loadFromFile(TODOFILENAME);
+		} catch (ClassNotFoundException e) {
+			// Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList);
-		
-        OnClickListener addTODOListener = new OnClickListener() {
-            public void onClick(View v) {
-                EditText edit = (EditText) findViewById(R.id.addTODOField);
-                TODO newTODO = new TODO(edit.getText().toString());
-                ArchList.add(newTODO);
-                edit.setText("");
-                ListViewAdapter.notifyDataSetChanged();
-                updateChecked();
-            }
-        };
+
         
         TODOListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
