@@ -1,5 +1,6 @@
 /*  
  *  bholmwoo-ToDo: A simple ToDo list app.  
+ *  
  *  Copyright (C) 2014 Benjamin Holmwood bholmwood@ualberta.ca
  *  
  *  This program is free software: you can redistribute it and/or modify
@@ -21,9 +22,17 @@
 package ca.ualberta.cs.bholmwooToDo;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
@@ -43,10 +52,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
-
-
 public class MainActivity extends Activity {
 
+	
+	private static final String TODOFILENAME = "TODOLists.sav";
+	private static final String ARCHFILENAME = "ArchLists.sav";
 	
 	ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	ArrayAdapter<TODO> ListViewAdapter;
@@ -61,6 +71,16 @@ public class MainActivity extends Activity {
 		ListView TODOListView = (ListView) findViewById(R.id.TodoListView);
 		
 		registerForContextMenu(TODOListView);
+		
+		File file = new File(TODOFILENAME);
+		if(file.exists()) {
+			try {	
+				TODOList = loadFromFile(TODOFILENAME);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
 		
@@ -85,7 +105,6 @@ public class MainActivity extends Activity {
         });
 		
         addButton.setOnClickListener(addTODOListener);
-        //TODOListView.setOnClickListener(checkListener);
         
         TODOListView.setAdapter(ListViewAdapter);
         
@@ -114,30 +133,11 @@ public class MainActivity extends Activity {
         
         checkedCountText.setText("Completed: " + checkedCount);
 		uncheckedCountText.setText("Uncompleted: " + (itemCount - checkedCount));
+		
+		saveInFile(TODOFILENAME, TODOList);
+		
 	}
 	
-	/*
-	public void onCreateContextMenu(ContextMenu menu, View v,
-		    ContextMenuInfo menuInfo) {
-		  if (v.getId()==R.id.TodoListView) {
-		    AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
-		    menu.setHeaderTitle(TODOList.get(info.position).toString());
-		    String[] menuItems = getResources().getStringArray(R.array.menu);
-		    for (int i = 0; i<menuItems.length; i++) {
-		      menu.add(Menu.NONE, i, i, menuItems[i]);
-		    }
-		  }
-		}
-	*/
-	
-	/*
-	public void onCreateContextMenu(ContextMenu menu, View v,
-	        ContextMenuInfo menuInfo) {
-	    super.onCreateContextMenu(menu, v, menuInfo);
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.context_menu, menu);
-	}
-	*/
 	
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
@@ -156,30 +156,12 @@ public class MainActivity extends Activity {
             ListViewAdapter.notifyDataSetChanged();
             updateChecked();
 	    } 
-	    /*
-	      else if (...) {
-	        // code
-	    } */
 		else {
 	        return false;
 	    }
 	    return true;
 
 	}
-	/*
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-	    switch (item.getItemId()) {
-	    case MENU_CONTEXT_DELETE_ID:
-	        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	        Log.d(TAG, "removing item pos=" + info.position);
-	        mAdapter.remove(info.position);
-	        return true;
-	    default:
-	        return super.onContextItemSelected(item);
-	    }
-	}
-	*/
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -199,8 +181,60 @@ public class MainActivity extends Activity {
 		}
 		if (id == R.id.viewArchive) {
 	        Intent viewArchive = new Intent(this, ArchiveViewActivity.class);
+
 	        startActivity(viewArchive);
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	private void saveInFile(String FILENAME, ArrayList<TODO> TODOList) {
+		try {
+			//FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			
+			FileOutputStream fos = new FileOutputStream(FILENAME);
+			ObjectOutputStream os = new ObjectOutputStream(fos);
+			os.writeObject(TODOList);
+			os.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private ArrayList<TODO> loadFromFile(String FILENAME) throws ClassNotFoundException{
+		ArrayList<TODO> loadedList = new ArrayList<TODO>();
+		
+		//FileInputStream fis;
+		try {
+			FileInputStream fis = new FileInputStream(FILENAME);
+		    //fis = openFileInput(FILENAME);
+		    ObjectInputStream ois = new ObjectInputStream(fis);
+		    
+		    
+		    //Object obj = ois.readObject();
+		    
+		    //ArrayList loadedList = (ArrayList) obj;
+		    //loadedTODO = (ArrayList<TODO>) loadedList;
+		    
+		    //loadedTODO = (ArrayList<TODO>) obj;
+		    
+		    loadedList = (ArrayList<TODO>) ois.readObject();
+		    
+		    ois.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			return loadedList;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return loadedList;
+	}
+	
+	
+	
+	
 }
