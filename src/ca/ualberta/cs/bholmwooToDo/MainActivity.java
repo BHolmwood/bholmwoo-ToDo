@@ -25,14 +25,18 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 
@@ -61,13 +65,53 @@ public class MainActivity extends Activity {
                 TODOList.add(edit.getText().toString());
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
+                updateChecked();
             }
         };
+        
+        /*
+        OnClickListener checkListener = new OnClickListener() {
+        	public void onClick(View v) {
+        		updateChecked();
+        	}
+        };
+        */
+        
+        TODOListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+            	updateChecked();
+        
+            }
+
+        });
 		
         addButton.setOnClickListener(addTODOListener);
+        //TODOListView.setOnClickListener(checkListener);
         
         TODOListView.setAdapter(ListViewAdapter);
         
+	}
+	
+	public void updateChecked() {
+		TextView checkedCountText = (TextView) findViewById(R.id.checkedCount);
+		TextView uncheckedCountText = (TextView) findViewById(R.id.uncheckedCount);
+		
+		ListView TODOListView = (ListView) findViewById(R.id.TodoListView); 
+		
+        SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
+        int itemCount = TODOListView.getCount();
+
+        int checkedCount = 0;
+        
+        for(int i=itemCount-1; i >= 0; i--){
+            if(checkedItemPositions.get(i)){
+                checkedCount++;
+            }
+        }
+        
+        checkedCountText.setText("Completed: " + checkedCount);
+		uncheckedCountText.setText("Uncompleted: " + (itemCount - checkedCount));
 	}
 
 	@Override
