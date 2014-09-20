@@ -24,6 +24,7 @@ package ca.ualberta.cs.bholmwooToDo;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.Menu;
@@ -129,6 +130,10 @@ public class MainActivity extends Activity {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
+		}
+		if (id == R.id.viewArchive) {
+	        Intent viewArchive = new Intent(this, ArchiveViewActivity.class);
+	        startActivity(viewArchive);
 		}
 		return super.onOptionsItemSelected(item);
 	}

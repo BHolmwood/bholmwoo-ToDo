@@ -7,4 +7,7 @@
     <string name="addFieldHint">Enter a new ToDo</string>
     <string name="addText">Add</string>
     <string name="emptyListText">ToDo list is empty</string>
+    <string name="title_activity_archive_view">ArchiveViewActivity</string>
+    <string name="viewArchive">View Archive</string>
+
 </resources>
