@@ -33,6 +33,7 @@ public final class R {
         public static final int addButton=0x7f080004;
         public static final int addTODOField=0x7f080003;
         public static final int checkedCount=0x7f080008;
+        public static final int clearList=0x7f08000b;
         public static final int savedDebug=0x7f080006;
         public static final int uncheckedCount=0x7f080007;
         public static final int viewArchive=0x7f08000a;
@@ -50,6 +51,7 @@ public final class R {
         public static final int addFieldHint=0x7f050003;
         public static final int addText=0x7f050004;
         public static final int app_name=0x7f050000;
+        public static final int clearList=0x7f05000a;
         public static final int defaultChecked=0x7f050008;
         public static final int defaultUnchecked=0x7f050009;
         public static final int emptyListText=0x7f050005;

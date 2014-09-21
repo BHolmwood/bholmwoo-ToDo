@@ -110,6 +110,8 @@ public class MainActivity extends Activity {
             }
 
         });
+        
+        setChecked(TODOListView);
 		
         addButton.setOnClickListener(addTODOListener);
     
@@ -162,9 +164,18 @@ public class MainActivity extends Activity {
         checkedCountText.setText("Completed: " + checkedCount);
 		uncheckedCountText.setText("Uncompleted: " + (itemCount - checkedCount));
 		
-		//saveInFile(TODOFILENAME, TODOList);
+	}
+	
+	public void setChecked(ListView TODOListView) {
+		 
+		
+		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
+			TODOListView.setItemChecked(i, (TODOList.get(i).getStatus()) );
+		}
 		
 	}
+	
+	
 	
 	
 	
@@ -180,8 +191,14 @@ public class MainActivity extends Activity {
 
 	public boolean onContextItemSelected(MenuItem item) {
 
+	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+	    int itemIndex = info.position;
+		
+		TextView debugText = (TextView) findViewById(R.id.savedDebug);
+		
 	    if (item.getTitle() == "Remove") {
-            TODOList.remove(item.getItemId());
+	    	debugText.setText("Removing item " + itemIndex);
+            TODOList.remove(itemIndex);
             ListViewAdapter.notifyDataSetChanged();
             updateChecked();
 	    } 
@@ -213,6 +230,9 @@ public class MainActivity extends Activity {
 
 	        startActivity(viewArchive);
 		}
+		else if (id == R.id.clearList) {
+			//TODOList = new ArrayList<TODO>();
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -229,7 +249,7 @@ public class MainActivity extends Activity {
 		  fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
 		  os = new ObjectOutputStream(fos);
 		  os.writeObject(TODOList);
-		  savedDebugText.setText("Saved to file");
+		  //savedDebugText.setText("Saved to file");
 		  os.close();
 		} catch (Exception e) {
 			savedDebugText.setText("exception thrown: " + e);

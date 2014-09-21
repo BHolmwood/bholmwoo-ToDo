@@ -11,6 +11,7 @@
     <string name="viewArchive">View Archive</string>
     <string name="defaultChecked">Completed: 0</string>
     <string name="defaultUnchecked">Uncompleted: 0</string>
+    <string name="clearList">Clear All ToDos</string>
 
 
 </resources>

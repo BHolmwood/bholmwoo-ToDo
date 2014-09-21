@@ -45,6 +45,7 @@ public class ArchiveViewActivity extends Activity {
 		}
 		*/
 		
+		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList);
 
         
