@@ -62,6 +62,7 @@ public class MainActivity extends Activity {
 	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	
 	ArrayList<TODO> TODOList;
+	ArrayList<TODO> ArchList;
 	
 	ArrayAdapter<TODO> ListViewAdapter;
 	ListView TODOListView;
@@ -77,7 +78,8 @@ public class MainActivity extends Activity {
 		TODOListView = (ListView) findViewById(R.id.TodoListView);
 	
 		try {
-			TODOList = loadFromFile(TODOFILENAME);
+			TODOList = loadFromFile(TODOFILENAME, this);
+			ArchList = loadFromFile(ARCHFILENAME, this);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -258,13 +260,13 @@ public class MainActivity extends Activity {
 		
 	}
 
-	public ArrayList<TODO> loadFromFile(String FILENAME) throws ClassNotFoundException {
+	public static ArrayList<TODO> loadFromFile(String FILENAME, Context ctx) throws ClassNotFoundException {
 		ArrayList<TODO> loadedList = new ArrayList<TODO>();
 		
 		ObjectInputStream ois = null;
 		
 		try {
-			FileInputStream fis = openFileInput(FILENAME);
+			FileInputStream fis = ctx.openFileInput(FILENAME);
 			ois = new ObjectInputStream(fis);
 			loadedList = (ArrayList<TODO>) ois.readObject();
 		    

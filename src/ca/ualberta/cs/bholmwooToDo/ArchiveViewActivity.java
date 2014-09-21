@@ -1,5 +1,8 @@
 package ca.ualberta.cs.bholmwooToDo;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -36,14 +39,14 @@ public class ArchiveViewActivity extends Activity {
 		
 		registerForContextMenu(TODOListView);
 		
-		/*
+		
 		try {
-			ArchList = MainActivity.loadFromFile(TODOFILENAME);
+			ArchList = MainActivity.loadFromFile(TODOFILENAME, this);
 		} catch (ClassNotFoundException e) {
 			// Auto-generated catch block
 			e.printStackTrace();
 		}
-		*/
+		
 		
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList);
@@ -138,4 +141,6 @@ public class ArchiveViewActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 }
+
