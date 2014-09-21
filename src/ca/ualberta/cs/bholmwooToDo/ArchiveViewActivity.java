@@ -41,7 +41,7 @@ public class ArchiveViewActivity extends Activity {
 		
 		
 		try {
-			ArchList = MainActivity.loadFromFile(TODOFILENAME, this);
+			ArchList = MainActivity.loadFromFile(ARCHFILENAME, this);
 		} catch (ClassNotFoundException e) {
 			// Auto-generated catch block
 			e.printStackTrace();

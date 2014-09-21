@@ -198,7 +198,14 @@ public class MainActivity extends Activity {
 		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		
-	    if (item.getTitle() == "Remove") {
+		if (item.getTitle() == "Archive") {
+			debugText.setText("Archiving item " + itemIndex);
+			ArchList.add(TODOList.get(itemIndex));
+			saveInFile(ARCHFILENAME, ArchList);
+			TODOList.remove(itemIndex);
+			ListViewAdapter.notifyDataSetChanged();
+		}
+		else if (item.getTitle() == "Remove") {
 	    	debugText.setText("Removing item " + itemIndex);
             TODOList.remove(itemIndex);
             ListViewAdapter.notifyDataSetChanged();
@@ -234,6 +241,12 @@ public class MainActivity extends Activity {
 		}
 		else if (id == R.id.clearList) {
 			//TODOList = new ArrayList<TODO>();
+            for (int i = ( TODOList.size() - 1 ); i >= 0; i--) {
+            	TODOList.remove(i);	
+            }
+            ListViewAdapter.notifyDataSetChanged();
+            updateChecked();
+			
 		}
 		return super.onOptionsItemSelected(item);
 	}
