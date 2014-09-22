@@ -21,6 +21,7 @@
 //http://stackoverflow.com/questions/8785955/serialization-arraylist-java
 //http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
 //http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it
+//http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application
 
 package ca.ualberta.cs.bholmwooToDo;
 
@@ -51,7 +52,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -118,6 +118,12 @@ public class MainActivity extends Activity {
         
         setChecked(TODOListView);
         
+	}
+	
+	protected void onStart() {
+		super.onStart();
+		TextView debugText = (TextView) findViewById(R.id.savedDebug);
+		debugText.setText("onStart() called");
 	}
 	
 	protected void onPause() {
@@ -220,16 +226,24 @@ public class MainActivity extends Activity {
 		}
 		else if (id == R.id.clearList) {
 			//TODOList = new ArrayList<TODO>();
-            for (int i = ( TODOList.size() - 1 ); i >= 0; i--) {
+            
+			for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
+    			TODOListView.setItemChecked(i, false );
+    		}
+			for (int i = ( TODOList.size() - 1 ); i >= 0; i--) {
             	TODOList.remove(i);	
             }
-            ListViewAdapter.notifyDataSetChanged();
+            
+			ListViewAdapter.notifyDataSetChanged();
+    		
             updateChecked();
 			
 		}
 		else if (id == R.id.emailTODOs) {
 	        Intent emailTODOs = new Intent(this, EmailActivity.class);
-
+	        
+	        emailTODOs.putExtra("saveFileName", TODOFILENAME);
+	        
 	        startActivity(emailTODOs);
 			
 		}

@@ -21,28 +21,36 @@
         android:id="@+id/EmailListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/emailButton"
+        android:layout_above="@+id/selectAllButton"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/emailText"
-        android:layout_centerHorizontal="true"
         android:choiceMode="multipleChoice" >
 
     </ListView>
 
     <Button
-        android:id="@+id/emailButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/emailText"
-        android:text="@string/emailText" />
-
-    <Button
         android:id="@+id/selectAllButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/emailButton"
-        android:layout_alignBottom="@+id/emailButton"
-        android:layout_alignLeft="@+id/EmailListView"
+        android:layout_above="@+id/deselectAllButton"
+        android:layout_alignLeft="@+id/deselectAllButton"
         android:text="@string/selectAllText" />
+
+    <Button
+        android:id="@+id/deselectAllButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/EmailListView"
+        android:layout_alignParentBottom="true"
+        android:text="@string/deselectAllText" />
+
+    <Button
+        android:id="@+id/emailButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/deselectAllButton"
+        android:layout_alignRight="@+id/emailText"
+        android:layout_marginBottom="20dp"
+        android:text="@string/emailText" />
 
 </RelativeLayout>

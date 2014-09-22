@@ -1,36 +1,22 @@
 package ca.ualberta.cs.bholmwooToDo;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 
 public class EmailActivity extends Activity {
 
-	private static final String TODOFILENAME = "TODOLists.sav";
+
+	//private static final String TODOFILENAME = "TODOLists.sav";
+	String TODOFILENAME;
 	
 	ArrayList<TODO> TODOList;
 	
@@ -40,11 +26,19 @@ public class EmailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+		    TODOFILENAME = extras.getString("saveFileName");
+		}
+		
+		
 		setContentView(R.layout.activity_email);
 	
 		
 		Button emailButton = (Button) findViewById(R.id.emailButton);
 		Button selectAllButton = (Button) findViewById(R.id.selectAllButton);
+		Button deselectAllButton = (Button) findViewById(R.id.deselectAllButton);
 		
 		TODOListView = (ListView) findViewById(R.id.EmailListView);
 	
@@ -92,7 +86,7 @@ public class EmailActivity extends Activity {
         		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
         		email.putExtra(Intent.EXTRA_TEXT, emailBody);
         		//try {
-        		startActivity(Intent.createChooser(email, "Send mail..."));
+        		startActivity(Intent.createChooser(email, "Send as email using..."));
         		//} catch (android.content.ActivityNotFoundException ex) {
         		    //Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         		//}
@@ -107,9 +101,18 @@ public class EmailActivity extends Activity {
         		}
             }
         };
+
+        OnClickListener deselectAllListener = new OnClickListener() {
+            public void onClick(View v) {
+        		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
+        			TODOListView.setItemChecked(i, false);
+        		}
+            }
+        };
         
         emailButton.setOnClickListener(emailListener);
         selectAllButton.setOnClickListener(selectAllListener);
+        deselectAllButton.setOnClickListener(deselectAllListener);
 	}
 	
 	/*
