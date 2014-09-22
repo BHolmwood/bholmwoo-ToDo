@@ -97,13 +97,16 @@ public class ArchiveViewActivity extends Activity {
 	    String title = ListViewAdapter.getItem(info.position).getText();
 	    menu.setHeaderTitle(title);
 
-	    menu.add("Archive");
+	    menu.add("Unarchive");
 	    menu.add("Remove");
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
 
-	    if (item.getTitle() == "Remove") {
+		if (item.getTitle() == "Unarchive") {
+			//TODOList.add()
+		}
+		else if (item.getTitle() == "Remove") {
             ArchList.remove(item.getItemId());
             ListViewAdapter.notifyDataSetChanged();
             updateChecked();
