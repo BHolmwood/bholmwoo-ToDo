@@ -3,9 +3,9 @@
     package="ca.ualberta.cs.bholmwooToDo"
     android:versionCode="1"
     android:versionName="1.0" >
-	
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="17" />
@@ -27,6 +27,10 @@
         <activity
             android:name=".ArchiveViewActivity"
             android:label="@string/title_activity_archive_view" >
+        </activity>
+        <activity
+            android:name=".EmailActivity"
+            android:label="@string/title_activity_email" >
         </activity>
     </application>
 

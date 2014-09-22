@@ -15,6 +15,11 @@
         android:id="@+id/clearList" 
         android:title="@string/clearList">
     </item>
+    <item 
+        android:id="@+id/emailTODOs" 
+        android:title="@string/title_activity_email">
+        
+    </item>
     
     
 </menu>

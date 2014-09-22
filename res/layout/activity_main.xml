@@ -22,8 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/savedDebug"
         android:layout_below="@id/addTODOField"
-        android:choiceMode="multipleChoice" 
-        android:background="@color/light_blue">
+        android:choiceMode="multipleChoice">
 
     </ListView>
 

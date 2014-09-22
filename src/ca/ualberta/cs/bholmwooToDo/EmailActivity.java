@@ -1,29 +1,4 @@
-/*  
- *  bholmwoo-ToDo: A simple ToDo list app.  
- *  
- *  Copyright (C) 2014 Benjamin Holmwood bholmwood@ualberta.ca
- *  
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *  
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */ 
-
-//http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/
-//http://stackoverflow.com/questions/8785955/serialization-arraylist-java
-//http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
-//http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it
-
 package ca.ualberta.cs.bholmwooToDo;
-
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -38,32 +13,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AdapterView.OnItemClickListener;
 
+public class EmailActivity extends Activity {
 
-public class MainActivity extends Activity {
-
-	
 	private static final String TODOFILENAME = "TODOLists.sav";
-	private static final String ARCHFILENAME = "ArchLists.sav";
-	
-	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	
 	ArrayList<TODO> TODOList;
-	ArrayList<TODO> ArchList;
 	
 	ArrayAdapter<TODO> ListViewAdapter;
 	ListView TODOListView;
@@ -71,16 +40,16 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_email);
 	
 		
-		Button addButton = (Button) findViewById(R.id.addButton);
+		Button emailButton = (Button) findViewById(R.id.emailButton);
+		Button selectAllButton = (Button) findViewById(R.id.selectAllButton);
 		
-		TODOListView = (ListView) findViewById(R.id.TodoListView);
+		TODOListView = (ListView) findViewById(R.id.EmailListView);
 	
 		try {
-			TODOList = loadFromFile(TODOFILENAME, this);
-			ArchList = loadFromFile(ARCHFILENAME, this);
+			TODOList = MainActivity.loadFromFile(TODOFILENAME, this);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -92,39 +61,58 @@ public class MainActivity extends Activity {
 		
 		registerForContextMenu(TODOListView);
 		
-        OnClickListener addTODOListener = new OnClickListener() {
+		//TextView emailDebugText = (TextView) findViewById(R.id.emailDebug);
+		
+        OnClickListener emailListener = new OnClickListener() {
             public void onClick(View v) {
-                EditText edit = (EditText) findViewById(R.id.addTODOField);
-                TODO newTODO = new TODO(edit.getText().toString());
-                TODOList.add(newTODO);
-                saveInFile(TODOFILENAME, TODOList);
-                edit.setText("");
-                ListViewAdapter.notifyDataSetChanged();
-                updateChecked();
+            
+        		String emailBody = "A selection of my ToDos: \n\n";
+        	
+        		SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
+        	    int itemCount = TODOListView.getCount();
+        	    
+        	    for(int i = 0; i < itemCount; i++) {
+        	    	
+        	        if(checkedItemPositions.get(i)) {
+        		    	emailBody += "[";
+        		    	if (TODOList.get(i).getStatus()) {
+        		    		emailBody += "X]  ";
+        		    	}
+        		    	else {
+        		    		emailBody += "   ]  ";
+        		    	}
+        		    	emailBody += TODOList.get(i).getText() + "\n\n"; 
+        	        }
+        	    }
+        	    
+        	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
+        	    
+        		Intent email = new Intent(Intent.ACTION_SEND);
+        		email.setType("message/rfc822");
+        		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
+        		email.putExtra(Intent.EXTRA_TEXT, emailBody);
+        		//try {
+        		startActivity(Intent.createChooser(email, "Send mail..."));
+        		//} catch (android.content.ActivityNotFoundException ex) {
+        		    //Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        		//}
+            
             }
         };
         
-        addButton.setOnClickListener(addTODOListener);
-        
-        TODOListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-            	saveInFile(TODOFILENAME, TODOList);
-            	updateChecked();
-        
+        OnClickListener selectAllListener = new OnClickListener() {
+            public void onClick(View v) {
+        		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
+        			TODOListView.setItemChecked(i, true);
+        		}
             }
-
-        });
+        };
         
-        setChecked(TODOListView);
-        
+        emailButton.setOnClickListener(emailListener);
+        selectAllButton.setOnClickListener(selectAllListener);
 	}
 	
-	protected void onPause() {
-		super.onPause();
-		saveInFile(TODOFILENAME, TODOList);
-	}
-	
+	/*
 	public void updateChecked() {
 		TextView checkedCountText = (TextView) findViewById(R.id.checkedCount);
 		TextView uncheckedCountText = (TextView) findViewById(R.id.uncheckedCount);
@@ -196,6 +184,7 @@ public class MainActivity extends Activity {
 	    return true;
 
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -228,9 +217,7 @@ public class MainActivity extends Activity {
 			
 		}
 		else if (id == R.id.emailTODOs) {
-	        Intent emailTODOs = new Intent(this, EmailActivity.class);
-
-	        startActivity(emailTODOs);
+			
 			
 		}
 		return super.onOptionsItemSelected(item);
@@ -258,6 +245,7 @@ public class MainActivity extends Activity {
 		
 	}
 
+
 	public static ArrayList<TODO> loadFromFile(String FILENAME, Context ctx) throws ClassNotFoundException {
 		ArrayList<TODO> loadedList = new ArrayList<TODO>();
 		
@@ -284,5 +272,42 @@ public class MainActivity extends Activity {
 		
 		return loadedList;
 	}
+	 */	
+	
+	/*
+	
+	public void emailSelected() {
+		String emailBody = "";
+	
+		ListView TODOListView = (ListView) findViewById(R.id.TodoListView); 
+	
+		SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
+	    int itemCount = TODOListView.getCount();
+	    
+	    for(int i=itemCount-1; i >= 0; i--){
+	    	
+	        if(checkedItemPositions.get(i)) {
+		    	emailBody += TODOList.get(i).getText() + "[ ";
+		    	if (TODOList.get(i).getStatus()) {
+		    		emailBody += "X";
+		    	}
+		    	else {
+		    		emailBody += " ";
+		    	}
+		    	emailBody += "]\n"; 
+	        }
+	    }
+		Intent email = new Intent(Intent.ACTION_SEND);
+		email.setType("message/rfc822");
+		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
+		email.putExtra(Intent.EXTRA_TEXT, emailBody);
+		try {
+		    startActivity(Intent.createChooser(email, "Send mail..."));
+		} catch (android.content.ActivityNotFoundException ex) {
+		    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	*/
 	
 }
