@@ -74,10 +74,14 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 	
 		
+		/*
+		
+		final Context ctx = this;
+			
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
 		TODOListView = (ListView) findViewById(R.id.TodoListView);
-	
+		
 		try {
 			TODOList = loadFromFile(TODOFILENAME, this);
 			ArchList = loadFromFile(ARCHFILENAME, this);
@@ -97,7 +101,7 @@ public class MainActivity extends Activity {
                 EditText edit = (EditText) findViewById(R.id.addTODOField);
                 TODO newTODO = new TODO(edit.getText().toString());
                 TODOList.add(newTODO);
-                saveInFile(TODOFILENAME, TODOList);
+                saveInFile(TODOFILENAME, TODOList, ctx);
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
                 updateChecked();
@@ -109,7 +113,7 @@ public class MainActivity extends Activity {
         TODOListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-            	saveInFile(TODOFILENAME, TODOList);
+            	saveInFile(TODOFILENAME, TODOList, ctx);
             	updateChecked();
         
             }
@@ -117,18 +121,74 @@ public class MainActivity extends Activity {
         });
         
         setChecked(TODOListView);
-        
+        */
 	}
 	
 	protected void onStart() {
 		super.onStart();
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		debugText.setText("onStart() called");
+		
+		/*
+		try {
+			TODOList = loadFromFile(TODOFILENAME, this);
+			ArchList = loadFromFile(ARCHFILENAME, this);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ListViewAdapter.notifyDataSetChanged();
+	*/
+		final Context ctx = this;
+		
+		Button addButton = (Button) findViewById(R.id.addButton);
+		
+		TODOListView = (ListView) findViewById(R.id.TodoListView);
+		
+		try {
+			TODOList = loadFromFile(TODOFILENAME, this);
+			ArchList = loadFromFile(ARCHFILENAME, this);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
+        TODOListView.setAdapter(ListViewAdapter);
+        ListViewAdapter.notifyDataSetChanged();
+		
+		registerForContextMenu(TODOListView);
+		
+        OnClickListener addTODOListener = new OnClickListener() {
+            public void onClick(View v) {
+                EditText edit = (EditText) findViewById(R.id.addTODOField);
+                TODO newTODO = new TODO(edit.getText().toString());
+                TODOList.add(newTODO);
+                saveInFile(TODOFILENAME, TODOList, ctx);
+                edit.setText("");
+                ListViewAdapter.notifyDataSetChanged();
+                updateChecked();
+            }
+        };
+        
+        addButton.setOnClickListener(addTODOListener);
+        
+        TODOListView.setOnItemClickListener(new OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                    int position, long id) {
+            	saveInFile(TODOFILENAME, TODOList, ctx);
+            	updateChecked();
+        
+            }
+
+        });
+        
+        setChecked(TODOListView);
 	}
 	
 	protected void onPause() {
 		super.onPause();
-		saveInFile(TODOFILENAME, TODOList);
+		saveInFile(TODOFILENAME, TODOList, this);
 	}
 	
 	public void updateChecked() {
@@ -186,15 +246,20 @@ public class MainActivity extends Activity {
 		if (item.getTitle() == "Archive") {
 			debugText.setText("Archiving item " + itemIndex);
 			ArchList.add(TODOList.get(itemIndex));
-			saveInFile(ARCHFILENAME, ArchList);
 			TODOList.remove(itemIndex);
+			saveInFile(ARCHFILENAME, ArchList, this);
+			saveInFile(TODOFILENAME, TODOList, this);
 			ListViewAdapter.notifyDataSetChanged();
+			//updateChecked();
+			setChecked(TODOListView);
 		}
 		else if (item.getTitle() == "Remove") {
 	    	debugText.setText("Removing item " + itemIndex);
             TODOList.remove(itemIndex);
+			saveInFile(TODOFILENAME, TODOList, this);
             ListViewAdapter.notifyDataSetChanged();
-            updateChecked();
+            //updateChecked();
+            setChecked(TODOListView);
 	    } 
 		else {
 	        return false;
@@ -250,23 +315,23 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void saveInFile(String FILENAME, ArrayList<TODO> TODOList) {
+	public static void saveInFile(String FILENAME, ArrayList<TODO> TODOList, Context ctx) {
 		
-		TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
+		//TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
 		
-		savedDebugText.setText("saveInFile() called");
+		//savedDebugText.setText("saveInFile() called");
 		
 		FileOutputStream fos;
 		ObjectOutputStream os;
 
 		try {
-		  fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+		  fos = ctx.openFileOutput(FILENAME, Context.MODE_PRIVATE);
 		  os = new ObjectOutputStream(fos);
 		  os.writeObject(TODOList);
 		  //savedDebugText.setText("Saved to file");
 		  os.close();
 		} catch (Exception e) {
-			savedDebugText.setText("exception thrown: " + e);
+			//savedDebugText.setText("exception thrown: " + e);
 			e.printStackTrace();
 		}
 		

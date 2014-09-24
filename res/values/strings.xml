@@ -17,5 +17,6 @@
     <string name="emailText">Email</string>
     <string name="selectAllText">Select All</string>
     <string name="deselectAllText">Deselect All</string>
+    <string name="returnText">Return</string>
 
 </resources>

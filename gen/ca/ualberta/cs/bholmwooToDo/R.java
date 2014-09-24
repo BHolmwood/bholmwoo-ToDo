@@ -29,23 +29,24 @@ public final class R {
     }
     public static final class id {
         public static final int ArchCheckedCount=0x7f090001;
-        public static final int ArchTodoListView=0x7f090002;
+        public static final int ArchListView=0x7f090002;
         public static final int ArchUncheckedCount=0x7f090000;
         public static final int EmailListView=0x7f090004;
         public static final int TodoListView=0x7f09000a;
-        public static final int action_settings=0x7f09000e;
+        public static final int action_settings=0x7f09000f;
         public static final int addButton=0x7f090009;
         public static final int addTODOField=0x7f090008;
         public static final int checkedCount=0x7f09000d;
-        public static final int clearList=0x7f090010;
+        public static final int clearList=0x7f090011;
         public static final int deselectAllButton=0x7f090006;
         public static final int emailButton=0x7f090007;
-        public static final int emailTODOs=0x7f090011;
+        public static final int emailTODOs=0x7f090012;
         public static final int emailText=0x7f090003;
+        public static final int returnToList=0x7f09000e;
         public static final int savedDebug=0x7f09000b;
         public static final int selectAllButton=0x7f090005;
         public static final int uncheckedCount=0x7f09000c;
-        public static final int viewArchive=0x7f09000f;
+        public static final int viewArchive=0x7f090010;
     }
     public static final class layout {
         public static final int activity_archive_view=0x7f030000;
@@ -69,6 +70,7 @@ public final class R {
         public static final int emailText=0x7f06000d;
         public static final int emptyListText=0x7f060005;
         public static final int hello_world=0x7f060001;
+        public static final int returnText=0x7f060010;
         public static final int selectAllText=0x7f06000e;
         public static final int selectEmailText=0x7f06000c;
         public static final int title_activity_archive_view=0x7f060006;
