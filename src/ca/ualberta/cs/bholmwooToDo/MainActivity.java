@@ -255,6 +255,7 @@ public class MainActivity extends Activity {
 			//updateChecked();
 			checkedItemPositions.clear();
 			setChecked(TODOListView);
+			updateChecked();
 		}
 		else if (item.getTitle() == "Remove") {
 	    	debugText.setText("Removing item " + itemIndex);
@@ -264,6 +265,7 @@ public class MainActivity extends Activity {
             //updateChecked();
             checkedItemPositions.clear();
             setChecked(TODOListView);
+            updateChecked();
             
 	    } 
 		else {

@@ -147,6 +147,7 @@ public class ArchiveViewActivity extends Activity {
 			//updateChecked();
 			checkedItemPositions.clear();
 			setChecked(ArchListView);
+			updateChecked();
 		}
 		else if (item.getTitle() == "Remove") {
 	    	//debugText.setText("Removing item " + itemIndex);
@@ -156,6 +157,7 @@ public class ArchiveViewActivity extends Activity {
             //updateChecked();
             checkedItemPositions.clear();
             setChecked(ArchListView);
+            updateChecked();
 	    } 
 		else {
 	        return false;
@@ -208,12 +210,49 @@ public class ArchiveViewActivity extends Activity {
 	        startActivity(emailTODOs);
 			
 		}
-		else if (id == R.id.emailAllTODOs) {
-	        Intent emailTODOs = new Intent(this, EmailActivity.class);
-	        
-	        emailTODOs.putExtra("saveFileName", ARCHFILENAME);
-	        
-	        startActivity(emailTODOs);
+		else if (id == R.id.archEmailAll) {
+    		String emailBody = "My ToDos: \n\n Active ToDos:\n ----------------------\n\n";
+        	
+    	    int TODOItemCount = TODOList.size();
+    	    int ArchItemCount = ArchList.size();
+    	    
+    	    for(int i = 0; i < TODOItemCount; i++) {
+    	    	
+    	    	emailBody += "[";
+    	    	if (TODOList.get(i).getStatus()) {
+    	    		emailBody += "X]  ";
+    		    }
+    	    	else {
+    	    		emailBody += "   ]  ";
+    		    }
+    	    	emailBody += TODOList.get(i).getText() + "\n\n"; 
+    		}		
+
+    	    emailBody += " Archived ToDos:\n --------------------------\n\n";
+    	    
+    	    for(int i = 0; i < ArchItemCount; i++) {
+    	    	
+    	        
+    	    	emailBody += "[";
+    	    	if (ArchList.get(i).getStatus()) {
+    	    		emailBody += "X]  ";
+    		    }
+    	    	else {
+    	    		emailBody += "   ]  ";
+    		    }
+    	    	emailBody += ArchList.get(i).getText() + "\n\n"; 
+    	    }
+    	    
+    	    
+    	    
+    	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
+    	    
+    		Intent email = new Intent(Intent.ACTION_SEND);
+    		email.setType("message/rfc822");
+    		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
+    		email.putExtra(Intent.EXTRA_TEXT, emailBody);
+    		//try {
+    		startActivity(Intent.createChooser(email, "Send as email using..."));
 			
 		}
 		return super.onOptionsItemSelected(item);
