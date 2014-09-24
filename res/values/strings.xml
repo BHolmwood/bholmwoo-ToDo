@@ -13,6 +13,7 @@
     <string name="defaultUnchecked">Uncompleted: 0</string>
     <string name="clearList">Clear All ToDos</string>
     <string name="title_activity_email">Email ToDos</string>
+    <string name="emailAllText">Email ALL ToDos</string>
     <string name="selectEmailText">Select ToDos to email</string>
     <string name="emailText">Email</string>
     <string name="selectAllText">Select All</string>

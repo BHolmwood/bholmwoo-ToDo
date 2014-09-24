@@ -164,7 +164,7 @@ public class ArchiveViewActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.archive_view, menu);
 		return true;
 	}
 
@@ -182,7 +182,7 @@ public class ArchiveViewActivity extends Activity {
 
 	        startActivity(mainActivity);
 		}
-		else if (id == R.id.clearList) {
+		else if (id == R.id.archClearList) {
 			//TODOList = new ArrayList<TODO>();
             
 			for (int i = ( ArchList.size() - 1 ); i >= 0; i--) { 
@@ -197,7 +197,15 @@ public class ArchiveViewActivity extends Activity {
             updateChecked();
 			
 		}
-		else if (id == R.id.emailTODOs) {
+		else if (id == R.id.archEmail) {
+	        Intent emailTODOs = new Intent(this, EmailActivity.class);
+	        
+	        emailTODOs.putExtra("saveFileName", ARCHFILENAME);
+	        
+	        startActivity(emailTODOs);
+			
+		}
+		else if (id == R.id.emailAllTODOs) {
 	        Intent emailTODOs = new Intent(this, EmailActivity.class);
 	        
 	        emailTODOs.putExtra("saveFileName", ARCHFILENAME);

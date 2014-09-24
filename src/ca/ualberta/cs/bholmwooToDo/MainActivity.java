@@ -312,6 +312,55 @@ public class MainActivity extends Activity {
 	        startActivity(emailTODOs);
 			
 		}
+		else if (id == R.id.emailAllTODOs) {
+	        
+    		String emailBody = "My ToDos: \n\n Active ToDos:\n ----------------------\n\n";
+        	
+    	    int TODOItemCount = TODOList.size();
+    	    int ArchItemCount = ArchList.size();
+    	    
+    	    for(int i = 0; i < TODOItemCount; i++) {
+    	    	
+    	    	emailBody += "[";
+    	    	if (TODOList.get(i).getStatus()) {
+    	    		emailBody += "X]  ";
+    		    }
+    	    	else {
+    	    		emailBody += "   ]  ";
+    		    }
+    	    	emailBody += TODOList.get(i).getText() + "\n\n"; 
+    		}		
+
+    	    emailBody += " Archived ToDos:\n --------------------------\n\n";
+    	    
+    	    for(int i = 0; i < ArchItemCount; i++) {
+    	    	
+    	        
+    	    	emailBody += "[";
+    	    	if (ArchList.get(i).getStatus()) {
+    	    		emailBody += "X]  ";
+    		    }
+    	    	else {
+    	    		emailBody += "   ]  ";
+    		    }
+    	    	emailBody += ArchList.get(i).getText() + "\n\n"; 
+    	    }
+    	    
+    	    
+    	    
+    	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
+    	    
+    		Intent email = new Intent(Intent.ACTION_SEND);
+    		email.setType("message/rfc822");
+    		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
+    		email.putExtra(Intent.EXTRA_TEXT, emailBody);
+    		//try {
+    		startActivity(Intent.createChooser(email, "Send as email using..."));
+    		//} catch (android.content.ActivityNotFoundException ex) {
+    		    //Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+    		//}
+			
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	

@@ -14,6 +14,11 @@
         android:title="@string/title_activity_email">
         
     </item>
+    <item
+        android:id="@+id/emailAllTODOs"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/emailAllText"/>
     
     
 </menu>
