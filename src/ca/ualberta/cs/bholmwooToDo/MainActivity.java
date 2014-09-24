@@ -243,6 +243,8 @@ public class MainActivity extends Activity {
 		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		
+		SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
+		
 		if (item.getTitle() == "Archive") {
 			debugText.setText("Archiving item " + itemIndex);
 			ArchList.add(TODOList.get(itemIndex));
@@ -251,6 +253,7 @@ public class MainActivity extends Activity {
 			saveInFile(TODOFILENAME, TODOList, this);
 			ListViewAdapter.notifyDataSetChanged();
 			//updateChecked();
+			checkedItemPositions.clear();
 			setChecked(TODOListView);
 		}
 		else if (item.getTitle() == "Remove") {
@@ -259,7 +262,9 @@ public class MainActivity extends Activity {
 			saveInFile(TODOFILENAME, TODOList, this);
             ListViewAdapter.notifyDataSetChanged();
             //updateChecked();
+            checkedItemPositions.clear();
             setChecked(TODOListView);
+            
 	    } 
 		else {
 	        return false;

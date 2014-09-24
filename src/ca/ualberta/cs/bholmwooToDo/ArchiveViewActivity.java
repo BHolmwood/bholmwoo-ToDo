@@ -135,6 +135,7 @@ public class ArchiveViewActivity extends Activity {
 	    int itemIndex = info.position;
 		
 		//TextView debugText = (TextView) findViewById(R.id.savedDebug);
+	    SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Unarchive") {
 			//debugText.setText("Archiving item " + itemIndex);
@@ -144,6 +145,7 @@ public class ArchiveViewActivity extends Activity {
 			MainActivity.saveInFile(ARCHFILENAME, ArchList, this);
 			ListViewAdapter.notifyDataSetChanged();
 			//updateChecked();
+			checkedItemPositions.clear();
 			setChecked(ArchListView);
 		}
 		else if (item.getTitle() == "Remove") {
@@ -152,6 +154,7 @@ public class ArchiveViewActivity extends Activity {
             MainActivity.saveInFile(ARCHFILENAME, ArchList, this);
             ListViewAdapter.notifyDataSetChanged();
             //updateChecked();
+            checkedItemPositions.clear();
             setChecked(ArchListView);
 	    } 
 		else {
