@@ -1,16 +1,12 @@
 package ca.ualberta.cs.bholmwooToDo;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,78 +14,83 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ArchiveViewActivity extends Activity {
 
 	private static final String TODOFILENAME = "TODOLists.sav";
 	private static final String ARCHFILENAME = "ArchLists.sav";
 	
-	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
+	TODOList ActiveList;
+	TODOList ArchList;
 	
-	ArrayList<TODO> ActiveList;
-	ArrayList<TODO> ArchList;
+	TODOListController ListController;
+	TODOListController ArchController;
 	
 	ArrayAdapter<TODO> ListViewAdapter;
 	ListView ArchListView;
+	
+	TextView checkedCountText;
+	TextView uncheckedCountText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_archive_view);
+
+	/*
+	}
 	
+	protected void onStart() {
+		super.onStart();
+		
+		*/
 		final Context ctx = this;
 		
-		/*
 		ArchListView = (ListView) findViewById(R.id.ArchListView);
-	
+		
+		checkedCountText = (TextView) findViewById(R.id.ArchCheckedCount);
+		uncheckedCountText = (TextView) findViewById(R.id.ArchUncheckedCount);
+		
+		ListController = new TODOListController();
+		ArchController = new TODOListController();
+		
 		try {
-			ActiveList = MainActivity.loadFromFile(TODOFILENAME, this);
-			ArchList = MainActivity.loadFromFile(ARCHFILENAME, this);
+			ListController.loadFromFile(TODOFILENAME, ctx);
+			ArchController.loadFromFile(ARCHFILENAME, ctx);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList);
+		ActiveList = ListController.getTODOList();
+		ArchList = ArchController.getTODOList();
+		
+		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList.getList());
         ArchListView.setAdapter(ListViewAdapter);
         ListViewAdapter.notifyDataSetChanged();
 		
 		registerForContextMenu(ArchListView);
-        
+      
         ArchListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-            	MainActivity.saveInFile(ARCHFILENAME, ArchList, ctx);
-            	updateChecked();
+                SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+            	ArchController.updateChecked(checkedItemPositions);
+            	ArchController.saveInFile(ARCHFILENAME, ctx);
+            	updateStats();
         
             }
 
         });
         
         setChecked(ArchListView);
-        updateChecked();
+        updateStats();
 	}
 	
-	protected void onStart() {
-		super.onStart();
-		//TextView debugText = (TextView) findViewById(R.id.savedDebug);
-		//debugText.setText("onStart() called");
-	}
-	
-	protected void onPause() {
-		super.onPause();
-		MainActivity.saveInFile(ARCHFILENAME, ArchList, this);
-	}
-	
-	public void updateChecked() {
-		TextView checkedCountText = (TextView) findViewById(R.id.ArchCheckedCount);
-		TextView uncheckedCountText = (TextView) findViewById(R.id.ArchUncheckedCount);
-		
-		ListView ArchListView = (ListView) findViewById(R.id.ArchListView); 
+	public void updateStats() {
 		
         SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
         int itemCount = ArchListView.getCount();
@@ -98,11 +99,7 @@ public class ArchiveViewActivity extends Activity {
         
         for(int i=itemCount-1; i >= 0; i--){
             if(checkedItemPositions.get(i)){
-            	ArchList.get(i).setStatus(true);
                 checkedCount++;
-            }
-            else {
-            	ArchList.get(i).setStatus(false);
             }
         }
         
@@ -111,11 +108,10 @@ public class ArchiveViewActivity extends Activity {
 		
 	}
 	
-	public void setChecked(ListView ArchListView) {
-		 
-		
+	public void setChecked(ListView TODOListView) {
+	
 		for (int i = ( ArchList.size() - 1 ); i >= 0; i--) { 
-			ArchListView.setItemChecked(i, (ArchList.get(i).getStatus()) );
+			TODOListView.setItemChecked(i, (ArchList.get(i).getStatus()) );
 		}
 		
 	}
@@ -135,30 +131,26 @@ public class ArchiveViewActivity extends Activity {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    int itemIndex = info.position;
 		
-		//TextView debugText = (TextView) findViewById(R.id.savedDebug);
-	    SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+		SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Unarchive") {
-			//debugText.setText("Archiving item " + itemIndex);
-			TODOList.add(ArchList.get(itemIndex));
+			ActiveList.add(ArchList.get(itemIndex));
 			ArchList.remove(itemIndex);
-			MainActivity.saveInFile(TODOFILENAME, TODOList, this);
-			MainActivity.saveInFile(ARCHFILENAME, ArchList, this);
-			ListViewAdapter.notifyDataSetChanged();
-			//updateChecked();
+			ListController.saveInFile(TODOFILENAME, this);
+			ArchController.saveInFile(ARCHFILENAME, this);
+			ListViewAdapter.notifyDataSetChanged();;
 			checkedItemPositions.clear();
 			setChecked(ArchListView);
-			updateChecked();
+			updateStats();
 		}
 		else if (item.getTitle() == "Remove") {
-	    	//debugText.setText("Removing item " + itemIndex);
-            ArchList.remove(itemIndex);
-            MainActivity.saveInFile(ARCHFILENAME, ArchList, this);
+	    	ArchList.remove(itemIndex);
+			ListController.saveInFile(ARCHFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
-            //updateChecked();
             checkedItemPositions.clear();
             setChecked(ArchListView);
-            updateChecked();
+            updateStats();
+            
 	    } 
 		else {
 	        return false;
@@ -184,23 +176,24 @@ public class ArchiveViewActivity extends Activity {
 			return true;
 		}
 		if (id == R.id.returnToList) {
-	        Intent mainActivity = new Intent(this, MainActivity.class);
+	        Intent returnToList = new Intent(this, MainActivity.class);
 
-	        startActivity(mainActivity);
+	        startActivity(returnToList);
 		}
 		else if (id == R.id.archClearList) {
-			//TODOList = new ArrayList<TODO>();
-            
-			for (int i = ( ArchList.size() - 1 ); i >= 0; i--) { 
-    			ArchListView.setItemChecked(i, false );
-    		}
+
 			for (int i = ( ArchList.size() - 1 ); i >= 0; i--) {
             	ArchList.remove(i);	
             }
-            
+			
+			SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+			checkedItemPositions.clear();
+			
 			ListViewAdapter.notifyDataSetChanged();
     		
-            updateChecked();
+			ArchController.saveInFile(ARCHFILENAME, this);
+			
+            updateStats();
 			
 		}
 		else if (id == R.id.archEmail) {
@@ -212,27 +205,27 @@ public class ArchiveViewActivity extends Activity {
 			
 		}
 		else if (id == R.id.archEmailAll) {
+	        
     		String emailBody = "My ToDos: \n\n Active ToDos:\n ----------------------\n\n";
         	
-    	    int TODOItemCount = TODOList.size();
+    	    int TODOItemCount = ActiveList.size();
     	    int ArchItemCount = ArchList.size();
     	    
     	    for(int i = 0; i < TODOItemCount; i++) {
     	    	
     	    	emailBody += "[";
-    	    	if (TODOList.get(i).getStatus()) {
+    	    	if (ActiveList.get(i).getStatus()) {
     	    		emailBody += "X]  ";
     		    }
     	    	else {
     	    		emailBody += "   ]  ";
     		    }
-    	    	emailBody += TODOList.get(i).getText() + "\n\n"; 
+    	    	emailBody += ActiveList.get(i).getText() + "\n\n"; 
     		}		
 
     	    emailBody += " Archived ToDos:\n --------------------------\n\n";
     	    
-    	    for(int i = 0; i < ArchItemCount; i++) {
-    	    	
+    	    for(int i = 0; i < ArchItemCount; i++) {  	
     	        
     	    	emailBody += "[";
     	    	if (ArchList.get(i).getStatus()) {
@@ -244,25 +237,19 @@ public class ArchiveViewActivity extends Activity {
     	    	emailBody += ArchList.get(i).getText() + "\n\n"; 
     	    }
     	    
-    	    
-    	    
     	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
     	    
     		Intent email = new Intent(Intent.ACTION_SEND);
     		email.setType("message/rfc822");
     		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
     		email.putExtra(Intent.EXTRA_TEXT, emailBody);
-    		//try {
-    		startActivity(Intent.createChooser(email, "Send as email using..."));
-			
+    		try {
+    			startActivity(Intent.createChooser(email, "Send as email using..."));
+    		} catch (android.content.ActivityNotFoundException ex) {
+    			Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+    		}		
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	
-	
-	*/
-
 	}
 
 }

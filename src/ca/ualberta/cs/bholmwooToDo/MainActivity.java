@@ -26,13 +26,6 @@
 package ca.ualberta.cs.bholmwooToDo;
 
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +45,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -59,11 +53,6 @@ public class MainActivity extends Activity {
 	
 	private static final String TODOFILENAME = "TODOLists.sav";
 	private static final String ARCHFILENAME = "ArchLists.sav";
-	
-	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
-	
-	//ArrayList<TODO> TODOList;
-	//ArrayList<TODO> ArchList;
 	
 	TODOList ActiveList;
 	TODOList ArchList;
@@ -88,17 +77,7 @@ public class MainActivity extends Activity {
 		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		debugText.setText("onStart() called");
-		
-		/*
-		try {
-			TODOList = loadFromFile(TODOFILENAME, this);
-			ArchList = loadFromFile(ARCHFILENAME, this);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		ListViewAdapter.notifyDataSetChanged();
-	*/
+
 		final Context ctx = this;
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
@@ -115,7 +94,7 @@ public class MainActivity extends Activity {
 			ListController.loadFromFile(TODOFILENAME, ctx);
 			ArchController.loadFromFile(ARCHFILENAME, ctx);
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
+			// Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -158,13 +137,6 @@ public class MainActivity extends Activity {
         updateStats();
 	}
 	
-	/*
-	protected void onPause() {
-		super.onPause();
-		saveInFile(TODOFILENAME, TODOList, this);
-	}
-	*/
-	
 	public void updateStats() {
 		
         SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
@@ -174,14 +146,8 @@ public class MainActivity extends Activity {
         
         for(int i=itemCount-1; i >= 0; i--){
             if(checkedItemPositions.get(i)){
-            	//ListController.setStatus(i, true);
                 checkedCount++;
             }
-            /*
-            else {
-            	ListController.setStatus(i, false);
-            }
-            */
         }
         
         checkedCountText.setText("Completed: " + checkedCount);
@@ -222,7 +188,7 @@ public class MainActivity extends Activity {
 			ActiveList.remove(itemIndex);
 			ListController.saveInFile(TODOFILENAME, this);
 			ArchController.saveInFile(ARCHFILENAME, this);
-			ListViewAdapter.notifyDataSetChanged();;
+			ListViewAdapter.notifyDataSetChanged();
 			checkedItemPositions.clear();
 			setChecked(ActiveListView);
 			updateStats();
@@ -232,7 +198,6 @@ public class MainActivity extends Activity {
             ActiveList.remove(itemIndex);
 			ListController.saveInFile(TODOFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
-            //updateChecked();
             checkedItemPositions.clear();
             setChecked(ActiveListView);
             updateStats();
@@ -267,21 +232,13 @@ public class MainActivity extends Activity {
 	        startActivity(viewArchive);
 		}
 		else if (id == R.id.clearList) {
-			//TODOList = new ArrayList<TODO>();
-            
-			/*
-			for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
-    			TODOListView.setItemChecked(i, false );
-    		}
-    		
-    		*/
+
 			for (int i = ( ActiveList.size() - 1 ); i >= 0; i--) {
             	ActiveList.remove(i);	
             }
 			
 			SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
 			checkedItemPositions.clear();
-			
 			
 			ListViewAdapter.notifyDataSetChanged();
     		
@@ -317,8 +274,7 @@ public class MainActivity extends Activity {
 
     	    emailBody += " Archived ToDos:\n --------------------------\n\n";
     	    
-    	    for(int i = 0; i < ArchItemCount; i++) {
-    	    	
+    	    for(int i = 0; i < ArchItemCount; i++) {  	
     	        
     	    	emailBody += "[";
     	    	if (ArchList.get(i).getStatus()) {
@@ -330,76 +286,19 @@ public class MainActivity extends Activity {
     	    	emailBody += ArchList.get(i).getText() + "\n\n"; 
     	    }
     	    
-    	    
-    	    
     	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
     	    
     		Intent email = new Intent(Intent.ACTION_SEND);
     		email.setType("message/rfc822");
     		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
     		email.putExtra(Intent.EXTRA_TEXT, emailBody);
-    		//try {
-    		startActivity(Intent.createChooser(email, "Send as email using..."));
-    		//} catch (android.content.ActivityNotFoundException ex) {
-    		    //Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-    		//}
-			
+    		try {
+    			startActivity(Intent.createChooser(email, "Send as email using..."));
+    		} catch (android.content.ActivityNotFoundException ex) {
+    			Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+    		}		
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	/*
-	
-	public static void saveInFile(String FILENAME, ArrayList<TODO> TODOList, Context ctx) {
-		
-		//TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
-		
-		//savedDebugText.setText("saveInFile() called");
-		
-		FileOutputStream fos;
-		ObjectOutputStream os;
-
-		try {
-		  fos = ctx.openFileOutput(FILENAME, Context.MODE_PRIVATE);
-		  os = new ObjectOutputStream(fos);
-		  os.writeObject(TODOList);
-		  //savedDebugText.setText("Saved to file");
-		  os.close();
-		} catch (Exception e) {
-			//savedDebugText.setText("exception thrown: " + e);
-			e.printStackTrace();
-		}
-		
-	}
-	
-
-	public static ArrayList<TODO> loadFromFile(String FILENAME, Context ctx) throws ClassNotFoundException {
-		ArrayList<TODO> loadedList = new ArrayList<TODO>();
-		
-		ObjectInputStream ois = null;
-		
-		try {
-			FileInputStream fis = ctx.openFileInput(FILENAME);
-			ois = new ObjectInputStream(fis);
-			loadedList = (ArrayList<TODO>) ois.readObject();
-		    
-		    try {
-		        if(ois != null) {
-		            ois.close();
-		        }
-		    } catch (IOException e) {
-		    	e.printStackTrace();
-		    }
-		} 
-		
-		catch (IOException e) {
-			// Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return loadedList;
-	}
-	
-	*/
 	
 }
