@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class TODOList implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2695985525090052035L;
 	private ArrayList<TODO> TODOList;
 
 	public TODOList() {

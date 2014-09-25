@@ -44,7 +44,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends TODOListActivity {
@@ -57,9 +56,6 @@ public class MainActivity extends TODOListActivity {
 	
 	protected void onStart() {
 		super.onStart();
-		
-		TextView debugText = (TextView) findViewById(R.id.savedDebug);
-		debugText.setText("onStart() called");
 
 		final Context ctx = this;
 		
@@ -160,13 +156,10 @@ public class MainActivity extends TODOListActivity {
 
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    int itemIndex = info.position;
-		
-		TextView debugText = (TextView) findViewById(R.id.savedDebug);
-		
+				
 		SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Archive") {
-			debugText.setText("Archiving item " + itemIndex);
 			ArchList.add(ActiveList.get(itemIndex));
 			ActiveList.remove(itemIndex);
 			ListController.saveInFile(TODOFILENAME, this);
@@ -177,7 +170,6 @@ public class MainActivity extends TODOListActivity {
 			updateStats();
 		}
 		else if (item.getTitle() == "Remove") {
-	    	debugText.setText("Removing item " + itemIndex);
             ActiveList.remove(itemIndex);
 			ListController.saveInFile(TODOFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
@@ -223,6 +215,8 @@ public class MainActivity extends TODOListActivity {
 			SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 			checkedItemPositions.clear();
 			
+			ListController.saveInFile(TODOFILENAME, this);
+			
 			ListViewAdapter.notifyDataSetChanged();
     		
             updateStats();
@@ -238,48 +232,7 @@ public class MainActivity extends TODOListActivity {
 		}
 		else if (id == R.id.emailAllTODOs) {
 	        
-    		String emailBody = "My ToDos: \n\n Active ToDos:\n ----------------------\n\n";
-        	
-    	    int TODOItemCount = ActiveList.size();
-    	    int ArchItemCount = ArchList.size();
-    	    
-    	    for(int i = 0; i < TODOItemCount; i++) {
-    	    	
-    	    	emailBody += "[";
-    	    	if (ActiveList.get(i).getStatus()) {
-    	    		emailBody += "X]  ";
-    		    }
-    	    	else {
-    	    		emailBody += "   ]  ";
-    		    }
-    	    	emailBody += ActiveList.get(i).getText() + "\n\n"; 
-    		}		
-
-    	    emailBody += " Archived ToDos:\n --------------------------\n\n";
-    	    
-    	    for(int i = 0; i < ArchItemCount; i++) {  	
-    	        
-    	    	emailBody += "[";
-    	    	if (ArchList.get(i).getStatus()) {
-    	    		emailBody += "X]  ";
-    		    }
-    	    	else {
-    	    		emailBody += "   ]  ";
-    		    }
-    	    	emailBody += ArchList.get(i).getText() + "\n\n"; 
-    	    }
-    	    
-    	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
-    	    
-    		Intent email = new Intent(Intent.ACTION_SEND);
-    		email.setType("message/rfc822");
-    		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
-    		email.putExtra(Intent.EXTRA_TEXT, emailBody);
-    		try {
-    			startActivity(Intent.createChooser(email, "Send as email using..."));
-    		} catch (android.content.ActivityNotFoundException ex) {
-    			Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-    		}		
+			emailAllTODOs();
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -3,7 +3,10 @@ package ca.ualberta.cs.bholmwooToDo;
 import java.io.Serializable;
 
 public class TODO implements Serializable {
-
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2995738622752577566L;
 	private String text;
 	private Boolean status;
 	

@@ -33,24 +33,23 @@ public final class R {
         public static final int ArchUncheckedCount=0x7f090000;
         public static final int EmailListView=0x7f090004;
         public static final int TodoListView=0x7f09000a;
-        public static final int action_settings=0x7f090012;
+        public static final int action_settings=0x7f090011;
         public static final int addButton=0x7f090009;
         public static final int addTODOField=0x7f090008;
-        public static final int archClearList=0x7f09000f;
-        public static final int archEmail=0x7f090010;
-        public static final int archEmailAll=0x7f090011;
-        public static final int checkedCount=0x7f09000d;
-        public static final int clearList=0x7f090014;
+        public static final int archClearList=0x7f09000e;
+        public static final int archEmail=0x7f09000f;
+        public static final int archEmailAll=0x7f090010;
+        public static final int checkedCount=0x7f09000c;
+        public static final int clearList=0x7f090013;
         public static final int deselectAllButton=0x7f090006;
-        public static final int emailAllTODOs=0x7f090016;
+        public static final int emailAllTODOs=0x7f090015;
         public static final int emailButton=0x7f090007;
-        public static final int emailTODOs=0x7f090015;
+        public static final int emailTODOs=0x7f090014;
         public static final int emailText=0x7f090003;
-        public static final int returnToList=0x7f09000e;
-        public static final int savedDebug=0x7f09000b;
+        public static final int returnToList=0x7f09000d;
         public static final int selectAllButton=0x7f090005;
-        public static final int uncheckedCount=0x7f09000c;
-        public static final int viewArchive=0x7f090013;
+        public static final int uncheckedCount=0x7f09000b;
+        public static final int viewArchive=0x7f090012;
     }
     public static final class layout {
         public static final int activity_archive_view=0x7f030000;
