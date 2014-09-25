@@ -30,7 +30,7 @@ public class ArchiveViewActivity extends Activity {
 	
 	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	
-	ArrayList<TODO> TODOList;
+	ArrayList<TODO> ActiveList;
 	ArrayList<TODO> ArchList;
 	
 	ArrayAdapter<TODO> ListViewAdapter;
@@ -43,10 +43,11 @@ public class ArchiveViewActivity extends Activity {
 	
 		final Context ctx = this;
 		
+		/*
 		ArchListView = (ListView) findViewById(R.id.ArchListView);
 	
 		try {
-			TODOList = MainActivity.loadFromFile(TODOFILENAME, this);
+			ActiveList = MainActivity.loadFromFile(TODOFILENAME, this);
 			ArchList = MainActivity.loadFromFile(ARCHFILENAME, this);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -70,7 +71,7 @@ public class ArchiveViewActivity extends Activity {
         });
         
         setChecked(ArchListView);
-        
+        updateChecked();
 	}
 	
 	protected void onStart() {
@@ -257,5 +258,11 @@ public class ArchiveViewActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-}
+	
+	
+	
+	*/
 
+	}
+
+}

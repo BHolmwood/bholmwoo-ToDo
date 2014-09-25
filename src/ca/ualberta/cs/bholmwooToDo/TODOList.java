@@ -1,32 +1,37 @@
 package ca.ualberta.cs.bholmwooToDo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import android.widget.ArrayAdapter;
-
-public class TODOList {
+public class TODOList implements Serializable {
 	private ArrayList<TODO> TODOList;
-	private ArrayAdapter<TODO> ListViewAdapter;
-	
-	public TODOList(ArrayList<TODO> TODOList, ArrayAdapter<TODO> ListViewAdapter) {
-		this.TODOList = TODOList;
-		this.ListViewAdapter = ListViewAdapter;
+
+	public TODOList() {
+		TODOList = new ArrayList<TODO>();
 	}
 	
-	public ArrayList<TODO> getTODOList(){
+	public ArrayList<TODO> getList(){
 		return TODOList;
 	}
 	
-	public void setTODOList(ArrayList<TODO> newTODOList) {
-		this.TODOList = newTODOList;
+	public void add(TODO newTODO) {
+		TODOList.add(newTODO);
 	}
 	
-	public ArrayAdapter<TODO> getListViewAdapter(){
-		return ListViewAdapter;
+	public void remove(int i) {
+		TODOList.remove(i);
 	}
 	
-	public void setListViewAdapter(ArrayAdapter<TODO> newListViewAdapter) {
-		this.ListViewAdapter = newListViewAdapter;
+	public TODO get(int i) {
+		return TODOList.get(i);
+	}
+	
+	public int size() {
+		return TODOList.size();
+	}
+	
+	public String toString() {
+		return TODOList.toString();
 	}
 	
 }

@@ -27,6 +27,8 @@ public class EmailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		/*
+		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 		    TODOFILENAME = extras.getString("saveFileName");
@@ -312,5 +314,5 @@ public class EmailActivity extends Activity {
 	}
 	
 	*/
-	
+	}
 }

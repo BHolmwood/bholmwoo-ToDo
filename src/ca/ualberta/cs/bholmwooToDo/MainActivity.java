@@ -62,70 +62,30 @@ public class MainActivity extends Activity {
 	
 	//ArrayList<TODO> TODOList = new ArrayList<TODO>();
 	
-	ArrayList<TODO> TODOList;
-	ArrayList<TODO> ArchList;
+	//ArrayList<TODO> TODOList;
+	//ArrayList<TODO> ArchList;
+	
+	TODOList ActiveList;
+	TODOList ArchList;
+	
+	TODOListController ListController;
+	TODOListController ArchController;
 	
 	ArrayAdapter<TODO> ListViewAdapter;
-	ListView TODOListView;
+	ListView ActiveListView;
+	
+	TextView checkedCountText;
+	TextView uncheckedCountText;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-	
-		
-		/*
-		
-		final Context ctx = this;
-			
-		Button addButton = (Button) findViewById(R.id.addButton);
-		
-		TODOListView = (ListView) findViewById(R.id.TodoListView);
-		
-		try {
-			TODOList = loadFromFile(TODOFILENAME, this);
-			ArchList = loadFromFile(ARCHFILENAME, this);
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
-        TODOListView.setAdapter(ListViewAdapter);
-        ListViewAdapter.notifyDataSetChanged();
-		
-		registerForContextMenu(TODOListView);
-		
-        OnClickListener addTODOListener = new OnClickListener() {
-            public void onClick(View v) {
-                EditText edit = (EditText) findViewById(R.id.addTODOField);
-                TODO newTODO = new TODO(edit.getText().toString());
-                TODOList.add(newTODO);
-                saveInFile(TODOFILENAME, TODOList, ctx);
-                edit.setText("");
-                ListViewAdapter.notifyDataSetChanged();
-                updateChecked();
-            }
-        };
-        
-        addButton.setOnClickListener(addTODOListener);
-        
-        TODOListView.setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                    int position, long id) {
-            	saveInFile(TODOFILENAME, TODOList, ctx);
-            	updateChecked();
-        
-            }
-
-        });
-        
-        setChecked(TODOListView);
-        */
 	}
 	
 	protected void onStart() {
 		super.onStart();
+		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		debugText.setText("onStart() called");
 		
@@ -143,73 +103,85 @@ public class MainActivity extends Activity {
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
-		TODOListView = (ListView) findViewById(R.id.TodoListView);
+		ActiveListView = (ListView) findViewById(R.id.TodoListView);
+		
+		checkedCountText = (TextView) findViewById(R.id.checkedCount);
+		uncheckedCountText = (TextView) findViewById(R.id.uncheckedCount);
+		
+		ListController = new TODOListController();
+		ArchController = new TODOListController();
 		
 		try {
-			TODOList = loadFromFile(TODOFILENAME, this);
-			ArchList = loadFromFile(ARCHFILENAME, this);
+			ListController.loadFromFile(TODOFILENAME, ctx);
+			ArchController.loadFromFile(ARCHFILENAME, ctx);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, TODOList);
-        TODOListView.setAdapter(ListViewAdapter);
+		ActiveList = ListController.getTODOList();
+		ArchList = ArchController.getTODOList();
+		
+		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ActiveList.getList());
+        ActiveListView.setAdapter(ListViewAdapter);
         ListViewAdapter.notifyDataSetChanged();
 		
-		registerForContextMenu(TODOListView);
+		registerForContextMenu(ActiveListView);
 		
         OnClickListener addTODOListener = new OnClickListener() {
             public void onClick(View v) {
                 EditText edit = (EditText) findViewById(R.id.addTODOField);
                 TODO newTODO = new TODO(edit.getText().toString());
-                TODOList.add(newTODO);
-                saveInFile(TODOFILENAME, TODOList, ctx);
+                ActiveList.add(newTODO);
+                ListController.saveInFile(TODOFILENAME, ctx);
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
-                updateChecked();
+                updateStats();
             }
         };
         
         addButton.setOnClickListener(addTODOListener);
         
-        TODOListView.setOnItemClickListener(new OnItemClickListener() {
+        ActiveListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-            	saveInFile(TODOFILENAME, TODOList, ctx);
-            	updateChecked();
+                SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+            	ListController.updateChecked(checkedItemPositions);
+            	ListController.saveInFile(TODOFILENAME, ctx);
+            	updateStats();
         
             }
 
         });
         
-        setChecked(TODOListView);
+        setChecked(ActiveListView);
+        updateStats();
 	}
 	
+	/*
 	protected void onPause() {
 		super.onPause();
 		saveInFile(TODOFILENAME, TODOList, this);
 	}
+	*/
 	
-	public void updateChecked() {
-		TextView checkedCountText = (TextView) findViewById(R.id.checkedCount);
-		TextView uncheckedCountText = (TextView) findViewById(R.id.uncheckedCount);
+	public void updateStats() {
 		
-		ListView TODOListView = (ListView) findViewById(R.id.TodoListView); 
-		
-        SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
-        int itemCount = TODOListView.getCount();
+        SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+        int itemCount = ActiveListView.getCount();
 
         int checkedCount = 0;
         
         for(int i=itemCount-1; i >= 0; i--){
             if(checkedItemPositions.get(i)){
-            	TODOList.get(i).setStatus(true);
+            	//ListController.setStatus(i, true);
                 checkedCount++;
             }
+            /*
             else {
-            	TODOList.get(i).setStatus(false);
+            	ListController.setStatus(i, false);
             }
+            */
         }
         
         checkedCountText.setText("Completed: " + checkedCount);
@@ -218,10 +190,9 @@ public class MainActivity extends Activity {
 	}
 	
 	public void setChecked(ListView TODOListView) {
-		 
-		
-		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
-			TODOListView.setItemChecked(i, (TODOList.get(i).getStatus()) );
+	
+		for (int i = ( ActiveList.size() - 1 ); i >= 0; i--) { 
+			TODOListView.setItemChecked(i, (ActiveList.get(i).getStatus()) );
 		}
 		
 	}
@@ -243,29 +214,28 @@ public class MainActivity extends Activity {
 		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		
-		SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
+		SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Archive") {
 			debugText.setText("Archiving item " + itemIndex);
-			ArchList.add(TODOList.get(itemIndex));
-			TODOList.remove(itemIndex);
-			saveInFile(ARCHFILENAME, ArchList, this);
-			saveInFile(TODOFILENAME, TODOList, this);
-			ListViewAdapter.notifyDataSetChanged();
-			//updateChecked();
+			ArchList.add(ActiveList.get(itemIndex));
+			ActiveList.remove(itemIndex);
+			ListController.saveInFile(TODOFILENAME, this);
+			ArchController.saveInFile(ARCHFILENAME, this);
+			ListViewAdapter.notifyDataSetChanged();;
 			checkedItemPositions.clear();
-			setChecked(TODOListView);
-			updateChecked();
+			setChecked(ActiveListView);
+			updateStats();
 		}
 		else if (item.getTitle() == "Remove") {
 	    	debugText.setText("Removing item " + itemIndex);
-            TODOList.remove(itemIndex);
-			saveInFile(TODOFILENAME, TODOList, this);
+            ActiveList.remove(itemIndex);
+			ListController.saveInFile(TODOFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
             //updateChecked();
             checkedItemPositions.clear();
-            setChecked(TODOListView);
-            updateChecked();
+            setChecked(ActiveListView);
+            updateStats();
             
 	    } 
 		else {
@@ -299,16 +269,23 @@ public class MainActivity extends Activity {
 		else if (id == R.id.clearList) {
 			//TODOList = new ArrayList<TODO>();
             
+			/*
 			for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
     			TODOListView.setItemChecked(i, false );
     		}
-			for (int i = ( TODOList.size() - 1 ); i >= 0; i--) {
-            	TODOList.remove(i);	
+    		
+    		*/
+			for (int i = ( ActiveList.size() - 1 ); i >= 0; i--) {
+            	ActiveList.remove(i);	
             }
-            
+			
+			SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+			checkedItemPositions.clear();
+			
+			
 			ListViewAdapter.notifyDataSetChanged();
     		
-            updateChecked();
+            updateStats();
 			
 		}
 		else if (id == R.id.emailTODOs) {
@@ -323,19 +300,19 @@ public class MainActivity extends Activity {
 	        
     		String emailBody = "My ToDos: \n\n Active ToDos:\n ----------------------\n\n";
         	
-    	    int TODOItemCount = TODOList.size();
+    	    int TODOItemCount = ActiveList.size();
     	    int ArchItemCount = ArchList.size();
     	    
     	    for(int i = 0; i < TODOItemCount; i++) {
     	    	
     	    	emailBody += "[";
-    	    	if (TODOList.get(i).getStatus()) {
+    	    	if (ActiveList.get(i).getStatus()) {
     	    		emailBody += "X]  ";
     		    }
     	    	else {
     	    		emailBody += "   ]  ";
     		    }
-    	    	emailBody += TODOList.get(i).getText() + "\n\n"; 
+    	    	emailBody += ActiveList.get(i).getText() + "\n\n"; 
     		}		
 
     	    emailBody += " Archived ToDos:\n --------------------------\n\n";
@@ -371,6 +348,8 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	/*
+	
 	public static void saveInFile(String FILENAME, ArrayList<TODO> TODOList, Context ctx) {
 		
 		//TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
@@ -392,6 +371,7 @@ public class MainActivity extends Activity {
 		}
 		
 	}
+	
 
 	public static ArrayList<TODO> loadFromFile(String FILENAME, Context ctx) throws ClassNotFoundException {
 		ArrayList<TODO> loadedList = new ArrayList<TODO>();
@@ -419,5 +399,7 @@ public class MainActivity extends Activity {
 		
 		return loadedList;
 	}
+	
+	*/
 	
 }
