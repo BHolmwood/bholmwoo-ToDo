@@ -19,5 +19,6 @@
     <string name="selectAllText">Select All</string>
     <string name="deselectAllText">Deselect All</string>
     <string name="returnText">Return</string>
+    <string name="title_activity_todolist">TODOListActivity</string>
 
 </resources>

@@ -32,6 +32,10 @@
             android:name=".EmailActivity"
             android:label="@string/title_activity_email" >
         </activity>
+        <activity
+            android:name=".TODOListActivity"
+            android:label="@string/title_activity_todolist" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package ca.ualberta.cs.bholmwooToDo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,38 +17,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ArchiveViewActivity extends Activity {
-
-	private static final String TODOFILENAME = "TODOLists.sav";
-	private static final String ARCHFILENAME = "ArchLists.sav";
-	
-	TODOList ActiveList;
-	TODOList ArchList;
-	
-	TODOListController ListController;
-	TODOListController ArchController;
-	
-	ArrayAdapter<TODO> ListViewAdapter;
-	ListView ArchListView;
-	
-	TextView checkedCountText;
-	TextView uncheckedCountText;
+public class ArchiveViewActivity extends TODOListActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_archive_view);
 
-	/*
-	}
-	
-	protected void onStart() {
-		super.onStart();
-		
-		*/
 		final Context ctx = this;
 		
-		ArchListView = (ListView) findViewById(R.id.ArchListView);
+		ListView = (ListView) findViewById(R.id.ArchListView);
 		
 		checkedCountText = (TextView) findViewById(R.id.ArchCheckedCount);
 		uncheckedCountText = (TextView) findViewById(R.id.ArchUncheckedCount);
@@ -69,15 +46,15 @@ public class ArchiveViewActivity extends Activity {
 		ArchList = ArchController.getTODOList();
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ArchList.getList());
-        ArchListView.setAdapter(ListViewAdapter);
+        ListView.setAdapter(ListViewAdapter);
         ListViewAdapter.notifyDataSetChanged();
 		
-		registerForContextMenu(ArchListView);
+		registerForContextMenu(ListView);
       
-        ArchListView.setOnItemClickListener(new OnItemClickListener() {
+		ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-                SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+                SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
             	ArchController.updateChecked(checkedItemPositions);
             	ArchController.saveInFile(ARCHFILENAME, ctx);
             	updateStats();
@@ -86,14 +63,14 @@ public class ArchiveViewActivity extends Activity {
 
         });
         
-        setChecked(ArchListView);
+        setChecked(ListView);
         updateStats();
 	}
 	
 	public void updateStats() {
 		
-        SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
-        int itemCount = ArchListView.getCount();
+        SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
+        int itemCount = ListView.getCount();
 
         int checkedCount = 0;
         
@@ -131,7 +108,7 @@ public class ArchiveViewActivity extends Activity {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    int itemIndex = info.position;
 		
-		SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+		SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Unarchive") {
 			ActiveList.add(ArchList.get(itemIndex));
@@ -140,15 +117,15 @@ public class ArchiveViewActivity extends Activity {
 			ArchController.saveInFile(ARCHFILENAME, this);
 			ListViewAdapter.notifyDataSetChanged();;
 			checkedItemPositions.clear();
-			setChecked(ArchListView);
+			setChecked(ListView);
 			updateStats();
 		}
 		else if (item.getTitle() == "Remove") {
 	    	ArchList.remove(itemIndex);
-			ListController.saveInFile(ARCHFILENAME, this);
+			ArchController.saveInFile(ARCHFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
             checkedItemPositions.clear();
-            setChecked(ArchListView);
+            setChecked(ListView);
             updateStats();
             
 	    } 
@@ -186,7 +163,7 @@ public class ArchiveViewActivity extends Activity {
             	ArchList.remove(i);	
             }
 			
-			SparseBooleanArray checkedItemPositions = ArchListView.getCheckedItemPositions();
+			SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 			checkedItemPositions.clear();
 			
 			ListViewAdapter.notifyDataSetChanged();

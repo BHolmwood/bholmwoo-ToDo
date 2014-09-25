@@ -26,7 +26,6 @@
 package ca.ualberta.cs.bholmwooToDo;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -48,24 +47,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends TODOListActivity {
 
-	
-	private static final String TODOFILENAME = "TODOLists.sav";
-	private static final String ARCHFILENAME = "ArchLists.sav";
-	
-	TODOList ActiveList;
-	TODOList ArchList;
-	
-	TODOListController ListController;
-	TODOListController ArchController;
-	
-	ArrayAdapter<TODO> ListViewAdapter;
-	ListView ActiveListView;
-	
-	TextView checkedCountText;
-	TextView uncheckedCountText;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,7 +65,7 @@ public class MainActivity extends Activity {
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
-		ActiveListView = (ListView) findViewById(R.id.TodoListView);
+		ListView = (ListView) findViewById(R.id.TodoListView);
 		
 		checkedCountText = (TextView) findViewById(R.id.checkedCount);
 		uncheckedCountText = (TextView) findViewById(R.id.uncheckedCount);
@@ -102,10 +85,10 @@ public class MainActivity extends Activity {
 		ArchList = ArchController.getTODOList();
 		
 		ListViewAdapter = new ArrayAdapter<TODO>(this, android.R.layout.simple_list_item_multiple_choice, ActiveList.getList());
-        ActiveListView.setAdapter(ListViewAdapter);
+        ListView.setAdapter(ListViewAdapter);
         ListViewAdapter.notifyDataSetChanged();
 		
-		registerForContextMenu(ActiveListView);
+		registerForContextMenu(ListView);
 		
         OnClickListener addTODOListener = new OnClickListener() {
             public void onClick(View v) {
@@ -121,10 +104,10 @@ public class MainActivity extends Activity {
         
         addButton.setOnClickListener(addTODOListener);
         
-        ActiveListView.setOnItemClickListener(new OnItemClickListener() {
+        ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
-                SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+                SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
             	ListController.updateChecked(checkedItemPositions);
             	ListController.saveInFile(TODOFILENAME, ctx);
             	updateStats();
@@ -133,14 +116,14 @@ public class MainActivity extends Activity {
 
         });
         
-        setChecked(ActiveListView);
+        setChecked(ListView);
         updateStats();
 	}
 	
 	public void updateStats() {
 		
-        SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
-        int itemCount = ActiveListView.getCount();
+        SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
+        int itemCount = ListView.getCount();
 
         int checkedCount = 0;
         
@@ -180,7 +163,7 @@ public class MainActivity extends Activity {
 		
 		TextView debugText = (TextView) findViewById(R.id.savedDebug);
 		
-		SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+		SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 		
 		if (item.getTitle() == "Archive") {
 			debugText.setText("Archiving item " + itemIndex);
@@ -190,7 +173,7 @@ public class MainActivity extends Activity {
 			ArchController.saveInFile(ARCHFILENAME, this);
 			ListViewAdapter.notifyDataSetChanged();
 			checkedItemPositions.clear();
-			setChecked(ActiveListView);
+			setChecked(ListView);
 			updateStats();
 		}
 		else if (item.getTitle() == "Remove") {
@@ -199,7 +182,7 @@ public class MainActivity extends Activity {
 			ListController.saveInFile(TODOFILENAME, this);
             ListViewAdapter.notifyDataSetChanged();
             checkedItemPositions.clear();
-            setChecked(ActiveListView);
+            setChecked(ListView);
             updateStats();
             
 	    } 
@@ -237,7 +220,7 @@ public class MainActivity extends Activity {
             	ActiveList.remove(i);	
             }
 			
-			SparseBooleanArray checkedItemPositions = ActiveListView.getCheckedItemPositions();
+			SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
 			checkedItemPositions.clear();
 			
 			ListViewAdapter.notifyDataSetChanged();

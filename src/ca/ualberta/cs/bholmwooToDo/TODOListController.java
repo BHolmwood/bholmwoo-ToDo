@@ -11,7 +11,7 @@ import android.util.SparseBooleanArray;
 
 
 public class TODOListController {
-	public TODOList List;
+	private TODOList List;
 	
 	public TODOList getTODOList() {
 		if (List == null) {
@@ -20,6 +20,8 @@ public class TODOListController {
 		return List;
 	}
 	
+	
+	//Taken from http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
 	public void updateChecked(SparseBooleanArray checkedItemPositions) {
 
         int itemCount = checkedItemPositions.size();
