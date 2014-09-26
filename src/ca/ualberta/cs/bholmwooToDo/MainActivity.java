@@ -115,8 +115,7 @@ public class MainActivity extends TODOListActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
             	ListViewAdapter.notifyDataSetChanged();
-            	//ListController.updateChecked(checkedItemPositions);
-                ListController.setStatus(position, !(ListController.getTODOList().get(position).getStatus() ) );
+                ListController.setStatus(position, !(ListController.getStatus(position) ) );
             	// Save in file immediately after updating a ToDo's status.
             	ListController.saveInFile(TODOFILENAME, ctx);
             	updateStats();

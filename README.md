@@ -68,29 +68,49 @@ Use the checkboxes to select ToDos to email, or hit "Select All" to select all f
 Hit "Deselect All" to clear selections.
 Hit "Email" to email currently selected ToDos.
 
+Licence
+------- 
+
+   bholmwoo-ToDo: A simple ToDo list app.  
+   
+   Copyright (C) 2014 Benjamin Holmwood bholmwood@ualberta.ca
+   
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+   
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  
 
 Resources Used
 --------------
-"Deleting Selected Items from ListView in Android" - Knowledge By Experience
+George Matthew - "Deleting Selected Items from ListView in Android" - Knowledge By Experience
   http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/
   2012 - 06- 21, accessed 2014 - 09 - 21
 
-"serialization ArrayList Java" - StackOverflow
+Ivaylo Petrov - "serialization ArrayList Java" - StackOverflow
   http://stackoverflow.com/questions/8785955/serialization-arraylist-java
   2012 - 01- 09, accessed 2014 - 09 - 21
   
 
-"Show a context menu for long-clicks in an Android ListView" - Mike Plate
+Mike Plate - "Show a context menu for long-clicks in an Android ListView" - mikeplate.com
   http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
   2010 - 01 - 21, accessed 2014 - 09 - 21
 
 
-"How to write an ArrayList to file and retreive it?"- StackOverflow
+Flawyte - "How to write an ArrayList to file and retreive it?"- StackOverflow
   http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it
   2012 - 08 - 28, accessed 2014 - 09 - 21
 
 
-"How can I send emails from my android application?" - StackOverflow
+fiXedd - "How can I send emails from my android application?" - StackOverflow
   http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application
   2010 - 02 - 04, accessed 2014 - 09 - 21
   

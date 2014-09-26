@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import android.content.Context;
-import android.util.SparseBooleanArray;
 
 
 public class TODOListController {
@@ -23,26 +22,12 @@ public class TODOListController {
 		}
 		return List;
 	}	
-	
-	public void updateChecked(SparseBooleanArray checkedItemPositions) {
-		/*	Updates the status of ToDos to reflect current checked status in listview.
-		 *	Adapted from http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
-		 */
-		
-        int itemCount = checkedItemPositions.size();
-        
 
-        for (int i = itemCount - 1; i >= 0; i--){
-        	if(checkedItemPositions.get(i)){
-        		setStatus(i, true);
-        	}
-        	else {
-        		setStatus(i, false);
-        	}
-        }
-        
+	public boolean getStatus(int i) {
+		// Return the current status of ToDo i.
+		return List.get(i).getStatus();
 	}
-
+	
 	public void setStatus(int i, boolean status) {
 		// Set the status of ToDo i.
 		List.get(i).setStatus(status);
