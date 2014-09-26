@@ -13,7 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class EmailActivity extends Activity {
-
+	/*	The email activity. Shows a ToDo list with check boxes that allows the user to select
+	 * 	which ToDos they would like to email. User may select all, or clear all selections.
+	 */
 
 	String TODOFILENAME;
 	
@@ -88,19 +90,22 @@ public class EmailActivity extends Activity {
         	    
         	    emailBody += "Sent from bholmwoo-ToDo, a simple ToDo list app for Android. \n";
         	    
+        	    // Adapted from http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application 2014-09-21
+        	    
         		Intent email = new Intent(Intent.ACTION_SEND);
         		email.setType("message/rfc822");
         		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
         		email.putExtra(Intent.EXTRA_TEXT, emailBody);
-        		//try {
+        		try {
         		startActivity(Intent.createChooser(email, "Send as email using..."));
-        		//} catch (android.content.ActivityNotFoundException ex) {
-        		    //Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-        		//}
+        		} catch (android.content.ActivityNotFoundException ex) {
+        		    Toast.makeText(ctx, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        		}
             
             }
         };
         
+        // Click listener for "Select All" button
         OnClickListener selectAllListener = new OnClickListener() {
             public void onClick(View v) {
         		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
@@ -109,6 +114,7 @@ public class EmailActivity extends Activity {
             }
         };
 
+        // Click listener for "Deselect All" button
         OnClickListener deselectAllListener = new OnClickListener() {
             public void onClick(View v) {
         		for (int i = ( TODOList.size() - 1 ); i >= 0; i--) { 
@@ -120,38 +126,6 @@ public class EmailActivity extends Activity {
         emailButton.setOnClickListener(emailListener);
         selectAllButton.setOnClickListener(selectAllListener);
         deselectAllButton.setOnClickListener(deselectAllListener);
-	}
-	
-	public void emailSelected() {
-		String emailBody = "";
-	
-		ListView TODOListView = (ListView) findViewById(R.id.TodoListView); 
-	
-		SparseBooleanArray checkedItemPositions = TODOListView.getCheckedItemPositions();
-	    int itemCount = TODOListView.getCount();
-	    
-	    for(int i=itemCount-1; i >= 0; i--){
-	    	
-	        if(checkedItemPositions.get(i)) {
-		    	emailBody += TODOList.get(i).getText() + "[ ";
-		    	if (TODOList.get(i).getStatus()) {
-		    		emailBody += "X";
-		    	}
-		    	else {
-		    		emailBody += " ";
-		    	}
-		    	emailBody += "]\n"; 
-	        }
-	    }
-		Intent email = new Intent(Intent.ACTION_SEND);
-		email.setType("message/rfc822");
-		email.putExtra(Intent.EXTRA_SUBJECT, "My ToDos");
-		email.putExtra(Intent.EXTRA_TEXT, emailBody);
-		try {
-		    startActivity(Intent.createChooser(email, "Send mail..."));
-		} catch (android.content.ActivityNotFoundException ex) {
-		    Toast.makeText(this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
-		}
 	}
 	
 }

@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 public class ArchiveViewActivity extends TODOListActivity {
 	/*	The archive. Shows a ToDo list with check boxes.
-	 * 
 	 */
 	
 	@Override
