@@ -31,14 +31,16 @@ public class TODOListController {
 		
         int itemCount = checkedItemPositions.size();
         
-        for(int i = itemCount - 1; i >= 0; i--){
-            if(checkedItemPositions.get(i)){
-            	setStatus(i, true);
-            }
-            else {
-            	setStatus(i, false);
-            }
+
+        for (int i = itemCount - 1; i >= 0; i--){
+        	if(checkedItemPositions.get(i)){
+        		setStatus(i, true);
+        	}
+        	else {
+        		setStatus(i, false);
+        	}
         }
+        
 	}
 
 	public void setStatus(int i, boolean status) {
