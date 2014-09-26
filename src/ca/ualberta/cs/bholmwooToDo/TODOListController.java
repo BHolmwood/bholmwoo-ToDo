@@ -11,19 +11,24 @@ import android.util.SparseBooleanArray;
 
 
 public class TODOListController {
+	/*	A controller class for TODOList.
+	 * 	Controls the status of ToDos and controls saving and loading.
+	 */
 	private TODOList List;
 	
 	public TODOList getTODOList() {
+		// If list is not initialised, initialise new list.
 		if (List == null) {
 			List = new TODOList();
 		}
 		return List;
-	}
+	}	
 	
-	
-	//Taken from http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
 	public void updateChecked(SparseBooleanArray checkedItemPositions) {
-
+		/*	Updates the status of ToDos to reflect current checked status in listview.
+		 *	Adapted from http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
+		 */
+		
         int itemCount = checkedItemPositions.size();
         
         for(int i = itemCount - 1; i >= 0; i--){
@@ -37,14 +42,15 @@ public class TODOListController {
 	}
 
 	public void setStatus(int i, boolean status) {
+		// Set the status of ToDo i.
 		List.get(i).setStatus(status);
 	}
+
 	
+	// Adapted from http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it 2014-09-21
 	public void saveInFile(String FILENAME, Context ctx) {
-		
-		//TextView savedDebugText = (TextView) findViewById(R.id.savedDebug);
-		
-		//savedDebugText.setText("saveInFile() called");
+		/*	Save the TODOList in the file FILENAME.
+		 */
 		
 		FileOutputStream fos;
 		ObjectOutputStream os;
@@ -53,16 +59,18 @@ public class TODOListController {
 		  fos = ctx.openFileOutput(FILENAME, 0);
 		  os = new ObjectOutputStream(fos);
 		  os.writeObject(List);
-		  //savedDebugText.setText("Saved to file");
 		  os.close();
 		} catch (Exception e) {
-			//savedDebugText.setText("exception thrown: " + e);
 			e.printStackTrace();
 		}
 		
 	}
 	
+	// Adapted from http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it 2014-09-21
 	public void loadFromFile(String FILENAME, Context ctx) throws ClassNotFoundException {
+		/*	Load the TODOList from the file FILENAME
+		 */
+		
 		TODOList loadedList = new TODOList();
 		
 		ObjectInputStream ois = null;

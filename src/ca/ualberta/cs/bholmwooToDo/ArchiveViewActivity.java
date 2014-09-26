@@ -17,14 +17,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ArchiveViewActivity extends TODOListActivity {
+	/*	The archive. Shows a ToDo list with check boxes.
+	 * 
+	 */
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_archive_view);
 
+		// Set context for saving to file
 		final Context ctx = this;
 		
+		
+		// Set up buttons, views, and controllers
 		ListView = (ListView) findViewById(R.id.ArchListView);
 		
 		checkedCountText = (TextView) findViewById(R.id.ArchCheckedCount);
@@ -33,6 +39,7 @@ public class ArchiveViewActivity extends TODOListActivity {
 		ListController = new TODOListController();
 		ArchController = new TODOListController();
 		
+		// Load both the active ToDo list and the archive list from file.
 		try {
 			ListController.loadFromFile(TODOFILENAME, ctx);
 			ArchController.loadFromFile(ARCHFILENAME, ctx);
@@ -50,6 +57,8 @@ public class ArchiveViewActivity extends TODOListActivity {
 		
 		registerForContextMenu(ListView);
       
+		
+		// Adapted from //http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
 		ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
@@ -67,6 +76,8 @@ public class ArchiveViewActivity extends TODOListActivity {
 	}
 	
 	public void updateStats() {
+		/* Updates the checked and unchecked counts and displays them on screen.
+		 */
 		
         SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
         int itemCount = ListView.getCount();
@@ -85,13 +96,16 @@ public class ArchiveViewActivity extends TODOListActivity {
 	}
 	
 	public void setChecked(ListView TODOListView) {
-	
+		/*	Updates the check boxes to reflect the current status of each ToDo.
+		 */
+		
 		for (int i = ( ArchList.size() - 1 ); i >= 0; i--) { 
 			TODOListView.setItemChecked(i, (ArchList.get(i).getStatus()) );
 		}
 		
 	}
 	
+	// Adapted from http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/ 2014-09-21
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;

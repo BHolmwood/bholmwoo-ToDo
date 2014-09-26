@@ -47,6 +47,8 @@ import android.widget.TextView;
 
 
 public class MainActivity extends TODOListActivity {
+	/*	The main activity. Shows a ToDo list with checkboxes and a field to add new ToDos.
+	 */
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +58,12 @@ public class MainActivity extends TODOListActivity {
 	
 	protected void onStart() {
 		super.onStart();
-
+		
+		// Set context for file saving
 		final Context ctx = this;
+		
+		
+		// Set up buttons, views, and controllers.
 		
 		Button addButton = (Button) findViewById(R.id.addButton);
 		
@@ -69,6 +75,7 @@ public class MainActivity extends TODOListActivity {
 		ListController = new TODOListController();
 		ArchController = new TODOListController();
 		
+		//Load both the active ToDo list and the archive list from file.
 		try {
 			ListController.loadFromFile(TODOFILENAME, ctx);
 			ArchController.loadFromFile(ARCHFILENAME, ctx);
@@ -86,11 +93,13 @@ public class MainActivity extends TODOListActivity {
 		
 		registerForContextMenu(ListView);
 		
+		// Listener for the add ToDo button.
         OnClickListener addTODOListener = new OnClickListener() {
             public void onClick(View v) {
                 EditText edit = (EditText) findViewById(R.id.addTODOField);
                 TODO newTODO = new TODO(edit.getText().toString());
                 ActiveList.add(newTODO);
+                // Save immediately after each new ToDo added.
                 ListController.saveInFile(TODOFILENAME, ctx);
                 edit.setText("");
                 ListViewAdapter.notifyDataSetChanged();
@@ -100,11 +109,14 @@ public class MainActivity extends TODOListActivity {
         
         addButton.setOnClickListener(addTODOListener);
         
+        
+        // Adapted from http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/ 2014-09-21
         ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
                 SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
             	ListController.updateChecked(checkedItemPositions);
+            	// Save in file immediately after updating a ToDo's status.
             	ListController.saveInFile(TODOFILENAME, ctx);
             	updateStats();
         
@@ -112,11 +124,14 @@ public class MainActivity extends TODOListActivity {
 
         });
         
+        // Refresh the check boxes in the list view to reflect the current ToDo list's status
         setChecked(ListView);
         updateStats();
 	}
 	
 	public void updateStats() {
+		/* Updates the checked and unchecked counts and displays them on screen.
+		 */
 		
         SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
         int itemCount = ListView.getCount();
@@ -135,13 +150,16 @@ public class MainActivity extends TODOListActivity {
 	}
 	
 	public void setChecked(ListView TODOListView) {
-	
+		/*	Updates the check boxes to reflect the current status of each ToDo.
+		 */
+		
 		for (int i = ( ActiveList.size() - 1 ); i >= 0; i--) { 
 			TODOListView.setItemChecked(i, (ActiveList.get(i).getStatus()) );
 		}
 		
 	}
 	
+	// Adapted from http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/ 2014-09-21
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 	    super.onCreateContextMenu(menu, v, menuInfo);
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
@@ -236,5 +254,4 @@ public class MainActivity extends TODOListActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
 }
