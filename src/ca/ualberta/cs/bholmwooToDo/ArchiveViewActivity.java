@@ -62,6 +62,7 @@ public class ArchiveViewActivity extends TODOListActivity {
 		ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
+            	ListViewAdapter.notifyDataSetChanged();
                 SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
             	ArchController.updateChecked(checkedItemPositions);
             	ArchController.saveInFile(ARCHFILENAME, ctx);

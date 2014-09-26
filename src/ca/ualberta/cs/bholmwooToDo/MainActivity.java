@@ -114,6 +114,7 @@ public class MainActivity extends TODOListActivity {
         ListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                     int position, long id) {
+            	ListViewAdapter.notifyDataSetChanged();
                 SparseBooleanArray checkedItemPositions = ListView.getCheckedItemPositions();
             	ListController.updateChecked(checkedItemPositions);
             	// Save in file immediately after updating a ToDo's status.
