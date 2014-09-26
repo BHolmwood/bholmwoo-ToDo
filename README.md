@@ -69,7 +69,11 @@ Hit "Deselect All" to clear selections.
 Hit "Email" to email currently selected ToDos.
 
 //http://wptrafficanalyzer.in/blog/deleting-selected-items-from-listview-in-android/
+
 //http://stackoverflow.com/questions/8785955/serialization-arraylist-java
+
 //http://www.mikeplate.com/2010/01/21/show-a-context-menu-for-long-clicks-in-an-android-listview/
+
 //http://stackoverflow.com/questions/12158483/how-to-write-an-arraylist-to-file-and-retrieve-it
+
 //http://stackoverflow.com/questions/2197741/how-can-i-send-emails-from-my-android-application
