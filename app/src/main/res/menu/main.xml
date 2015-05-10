@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ca.ualberta.cs.bholmwooToDo.MainActivity" >
+    <item 
+        android:id="@+id/viewArchive" 
+        android:title="@string/viewArchive">
+    </item>
+    <item 
+        android:id="@+id/clearList" 
+        android:title="@string/clearList">
+    </item>
+    <item 
+        android:id="@+id/emailTODOs" 
+        android:title="@string/title_activity_email">
+        
+    </item>
+    <item
+        android:id="@+id/emailAllTODOs"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/emailAllText"/>
+    
+    
+</menu>

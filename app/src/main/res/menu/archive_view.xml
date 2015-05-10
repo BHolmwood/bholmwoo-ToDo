@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ca.ualberta.cs.bholmwooToDo.ArchiveViewActivity" >
+
+    <item
+        android:id="@+id/returnToList"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/returnText"/>
+    <item
+        android:id="@+id/archClearList"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/clearList"/>
+    <item
+        android:id="@+id/archEmail"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/title_activity_email"/>
+    <item
+        android:id="@+id/archEmailAll"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/emailAllText"/>
+
+</menu>
